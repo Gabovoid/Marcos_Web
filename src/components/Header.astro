@@ -1,1 +1,44 @@
-<h1 class="text-4xl font-bold text-blue-500">Hola con Tailwind 🚀</h1>
+---
+import "../styles/global.css";
+---
+
+<header class="bg-black text-white flex items-center justify-between px-8 py-5">
+    <!-- Logo -->
+    <a href="/" class="flex items-center space-x-2">
+        <img src="src/assets//logo.png" alt="logo.png" class="h-10 w-auto" />
+        <span class="text-2xl font-bold tracking-widest">VINYL VOID</span>
+    </a>
+
+    <!-- Navegación -->
+    <nav class="text-1xl">
+        <ul class="flex space-x-5 font-semibold">
+            <li><a href="/" class="hover:text-gray-400">Inicio</a></li>
+            <li><a href="/productos" class="hover:text-gray-400">Productos</a></li>
+            <li><a href="/about" class="hover:text-gray-400">Nosotros</a></li>
+        </ul>
+    </nav>
+
+    <div class="flex items-center space-x-8">    
+    <!-- Buscador -->
+    <div class="flex items-center border-b border-white w-56 space-x-6">
+        <input
+            type="text"
+            placeholder="Buscar..."
+            class="bg-transparent text-white placeholder-gray-400 focus:outline-none w-full px-2"/>
+        <!-- Icono de lupa -->
+        <button class=" border-white rounded-full p-2 cursor-pointer hover:bg-white hover:text-black transition">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search-icon lucide-search"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
+        </button>
+    </div>
+
+    <!-- Icono de usuario -->
+    <button class=" border-white rounded-full p-3 cursor-pointer hover:bg-white hover:text-black transition">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user-icon lucide-user"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+    </button>
+
+    <button class=" border-white rounded-full p-3 cursor-pointer hover:bg-white hover:text-black transition">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-shopping-cart-icon lucide-shopping-cart"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
+    </button>
+
+    </div>
+</header>
