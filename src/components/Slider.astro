@@ -1,0 +1,104 @@
+---
+import "../styles/global.css";
+import { Image } from "astro:assets";
+import B1 from "../assets/B1.png";
+import B2 from "../assets/B2.png";
+---
+
+<section class="relative w-full h-[650px] overflow-hidden mt-[80px]">
+  <!-- Radios -->
+  <input type="radio" name="slider" id="slide-1" class="hidden" checked />
+  <input type="radio" name="slider" id="slide-2" class="hidden" />
+
+  <!-- Pista de slides -->
+  <div id="slides" class="flex h-full w-[200%] transition-transform duration-700 ease-in-out">
+    <!-- Slide 1 -->
+    <div class="w-1/2 h-[650px] shrink-0">
+        <Image
+            src={B1}
+            alt="Slider1"
+            class="h-full w-full object-cover"
+            format="png"/>
+    </div>
+    <!-- Slide 2 -->
+    <div class="w-1/2 h-[650px] shrink-0">
+      <Image
+            src={B2}
+            alt="Slider2"
+            class="h-full w-full object-cover"
+            format="png"/>
+    </div>
+  </div>
+
+  <!-- Flechas abajo a la izquierda -->
+  <div class="absolute bottom-4 left-4 flex gap-2 z-10">
+    <button id="prev" class="bg-black/40 text-white p-3 cursor-pointer">‹</button>
+    <button id="next" class="bg-black/40 text-white p-3 cursor-pointer">›</button>
+  </div>
+
+  <!-- Indicadores -->
+  <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-3 z-10">
+    <div class="w-10 h-0.5 rounded-full bg-white" id="ind1"></div>
+    <div class="w-10 h-0.5 rounded-full bg-white" id="ind2"></div>
+  </div>
+</section>
+
+<script is:inline>
+  const slides = document.getElementById("slides");
+  const indicators = [document.getElementById("ind1"), document.getElementById("ind2")];
+  let index = 0;
+
+  function updateSlide() {
+    slides.style.transform = `translateX(-${index * 50}%)`;
+    indicators.forEach((ind, i) => {
+      ind.classList.toggle("bg-black", i === index);
+      ind.classList.toggle("scale-125", i === index);
+    });
+  }
+
+  document.getElementById("next").addEventListener("click", () => {
+    index = (index + 1) % 2;
+    updateSlide();
+  });
+
+  document.getElementById("prev").addEventListener("click", () => {
+    index = (index - 1 + 2) % 2; 
+    updateSlide();
+  });
+
+  // Loop automático cada 3 segundos
+  setInterval(() => {
+    index = (index + 1) % 2;
+    updateSlide();
+  }, 3000);
+
+  // Inicializa indicadores
+  updateSlide();
+</script>
+
+<h1>a</h1>
+<h1>a</h1>
+<h1>a</h1>
+<h1>a</h1>
+<h1>a</h1>
+<h1>a</h1>
+<h1>a</h1>
+<h1>a</h1>
+<h1>a</h1>
+<h1>a</h1>
+<h1>a</h1>
+<h1>a</h1>
+<h1>a</h1>
+<h1>a</h1>
+<h1>a</h1>
+<h1>a</h1>
+<h1>a</h1>
+<h1>a</h1>
+<h1>a</h1>
+<h1>a</h1>
+<h1>a</h1>
+<h1>a</h1>
+<h1>a</h1>
+<h1>a</h1>
+<h1>a</h1>
+<h1>a</h1>
