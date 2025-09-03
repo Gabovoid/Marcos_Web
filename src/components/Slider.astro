@@ -5,41 +5,41 @@ import B1 from "../assets/B1.png";
 import B2 from "../assets/B2.png";
 ---
 
-<section class="relative w-full h-[650px] overflow-hidden mt-[80px]">
+<section class="relative w-full overflow-hidden mt-[80px]">
   <!-- Radios -->
   <input type="radio" name="slider" id="slide-1" class="hidden" checked />
   <input type="radio" name="slider" id="slide-2" class="hidden" />
 
   <!-- Pista de slides -->
-  <div id="slides" class="flex h-full w-[200%] transition-transform duration-700 ease-in-out">
+  <div id="slides" class="flex w-[200%] transition-transform duration-700 ease-in-out">
     <!-- Slide 1 -->
-    <div class="w-1/2 h-[650px] shrink-0">
-        <Image
-            src={B1}
-            alt="Slider1"
-            class="h-full w-full object-cover"
-            format="png"/>
+    <div class="w-1/2 shrink-0 aspect-[16/9] sm:aspect-[21/9]">
+      <Image
+        src={B1}
+        alt="Slider1"
+        class="h-full w-full object-cover"
+        format="png"/>
     </div>
     <!-- Slide 2 -->
-    <div class="w-1/2 h-[650px] shrink-0">
+    <div class="w-1/2 shrink-0 aspect-[16/9] sm:aspect-[21/9]">
       <Image
-            src={B2}
-            alt="Slider2"
-            class="h-full w-full object-cover"
-            format="png"/>
+        src={B2}
+        alt="Slider2"
+        class="h-full w-full object-cover"
+        format="png"/>
     </div>
   </div>
 
-  <!-- Flechas abajo a la izquierda -->
+  <!-- Flechas -->
   <div class="absolute bottom-4 left-4 flex gap-2 z-10">
-    <button id="prev" class="bg-black/40 text-white p-3 cursor-pointer">‹</button>
-    <button id="next" class="bg-black/40 text-white p-3 cursor-pointer">›</button>
+    <button id="prev" class="bg-black/40 text-white p-2 sm:p-3 cursor-pointer">‹</button>
+    <button id="next" class="bg-black/40 text-white p-2 sm:p-3 cursor-pointer">›</button>
   </div>
 
   <!-- Indicadores -->
   <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-3 z-10">
-    <div class="w-10 h-0.5 rounded-full bg-white" id="ind1"></div>
-    <div class="w-10 h-0.5 rounded-full bg-white" id="ind2"></div>
+    <div class="w-6 sm:w-10 h-0.5 rounded-full bg-white" id="ind1"></div>
+    <div class="w-6 sm:w-10 h-0.5 rounded-full bg-white" id="ind2"></div>
   </div>
 </section>
 
@@ -66,15 +66,41 @@ import B2 from "../assets/B2.png";
     updateSlide();
   });
 
-  // Loop automático cada 3 segundos
   setInterval(() => {
     index = (index + 1) % 2;
     updateSlide();
-  }, 3000);
+  }, 5000);
 
-  // Inicializa indicadores
-  updateSlide();
+  let startX = 0;
+  let endX = 0;
+
+  // Detecta cuando empieza el toque
+  slides.addEventListener("touchstart", (e) => {
+    startX = e.touches[0].clientX;
+  });
+
+  // Detecta cuando termina el toque
+  slides.addEventListener("touchend", (e) => {
+    endX = e.changedTouches[0].clientX;
+    handleSwipe();
+  });
+
+  function handleSwipe() {
+    const deltaX = endX - startX;
+
+    if (Math.abs(deltaX) > 50) { // umbral para evitar toques suaves
+      if (deltaX > 0) {
+        // swipe hacia la derecha → retrocede
+        index = (index - 1 + 2) % 2;
+      } else {
+        // swipe hacia la izquierda → avanza
+        index = (index + 1) % 2;
+      }
+      updateSlide();
+    }
+  }
 </script>
+
 
 <h1>a</h1>
 <h1>a</h1>
