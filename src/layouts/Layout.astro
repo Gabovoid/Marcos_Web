@@ -1,7 +1,6 @@
 ---
-import Header from '../components/Header.astro';
-import Slider from '../components/Slider.astro';
-
+import Header from '../components/Header/Header.astro';
+import "../styles/global.css";
 ---
 
 <!doctype html>
@@ -15,7 +14,6 @@ import Slider from '../components/Slider.astro';
 	</head>
 	<body>
 		<Header />
-		<hr class="bg-white border border-white h-[5px] w-full">
 		<slot />
 	</body>
 </html>
