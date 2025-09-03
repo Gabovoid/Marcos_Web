@@ -11,24 +11,36 @@ import B2 from "../assets/B2.png";
   <input type="radio" name="slider" id="slide-2" class="hidden" />
 
   <!-- Pista de slides -->
-  <div id="slides" class="flex w-[200%] transition-transform duration-700 ease-in-out">
-    <!-- Slide 1 -->
-    <div class="w-1/2 shrink-0 aspect-[16/9] sm:aspect-[21/9]">
-      <Image
-        src={B1}
-        alt="Slider1"
-        class="h-full w-full object-cover"
-        format="png"/>
-    </div>
-    <!-- Slide 2 -->
-    <div class="w-1/2 shrink-0 aspect-[16/9] sm:aspect-[21/9]">
-      <Image
-        src={B2}
-        alt="Slider2"
-        class="h-full w-full object-cover"
-        format="png"/>
-    </div>
-  </div>
+<div id="slides" class="flex w-[200%] transition-transform duration-700 ease-in-out">
+  <!-- Slide 1 -->
+  <!-- Slide 1 -->
+<div class="relative w-1/2 shrink-0 aspect-[16/9] sm:aspect-[21/9]">
+  <!-- Fondo -->
+  <div class="absolute inset-0 bg-black"></div>
+
+  <!-- Imagen -->
+  <Image
+    src={B1}
+    alt="Slider1"
+    class="h-full w-full object-contain relative z-10"
+    format="png"
+  />
+</div>
+
+<!-- Slide 2 -->
+<div class="relative w-1/2 shrink-0 aspect-[16/9] sm:aspect-[21/9]">
+  <!-- Fondo -->
+  <div class="absolute inset-0 bg-gradient-to-r from-black via-gray-900 to-black"></div>
+
+  <!-- Imagen -->
+  <Image
+    src={B2}
+    alt="Slider2"
+    class="h-full w-full object-contain relative z-10"
+    format="png"/>
+</div>
+</div>
+
 
   <!-- Flechas -->
   <div class="hidden lg:flex absolute bottom-4 left-4 gap-2 z-10">
