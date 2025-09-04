@@ -4,47 +4,56 @@ import B1 from "../../assets/B1.png";
 import B2 from "../../assets/B2.png";
 ---
 
-<section class="relative w-full overflow-hidden mt-[80px]">
+<section class="relative w-full overflow-hidden mt-[80px] border-b border-white">
   <!-- Radios -->
   <input type="radio" name="slider" id="slide-1" class="hidden" checked />
   <input type="radio" name="slider" id="slide-2" class="hidden" />
 
   <!-- Pista de slides -->
-<div id="slides" class="flex w-[200%] transition-transform duration-700 ease-in-out">
-  <!-- Slide 1 -->
-  <!-- Slide 1 -->
-<div class="relative w-1/2 shrink-0 aspect-[16/9] sm:aspect-[21/9]">
-  <!-- Fondo -->
-  <div class="absolute inset-0 bg-black"></div>
+  <div
+    id="slides"
+    class="flex w-[200%] transition-transform duration-700 ease-in-out"
+  >
+    <!-- Slide 1 -->
+    <div class="relative w-1/2 shrink-0 aspect-[16/9] sm:aspect-[21/9]">
+      <!-- Fondo -->
+      <div class="absolute inset-0 bg-black"></div>
 
-  <!-- Imagen -->
-  <Image
-    src={B1}
-    alt="Slider1"
-    class="h-full w-full object-contain relative z-10"
-    format="png"
-  />
-</div>
+      <!-- Imagen -->
+      <Image
+        src={B1}
+        alt="Slider1"
+        class="h-full w-full object-contain relative z-10"
+        format="png"
+      />
+    </div>
 
-<!-- Slide 2 -->
-<div class="relative w-1/2 shrink-0 aspect-[16/9] sm:aspect-[21/9]">
-  <!-- Fondo -->
-  <div class="absolute inset-0 bg-gradient-to-r from-black via-gray-900 to-black"></div>
+    <!-- Slide 2 -->
+    <div class="relative w-1/2 shrink-0 aspect-[16/9] sm:aspect-[21/9]">
+      <!-- Fondo -->
+      <div
+        class="absolute inset-0 bg-gradient-to-r from-black via-gray-900 to-black"
+      >
+      </div>
 
-  <!-- Imagen -->
-  <Image
-    src={B2}
-    alt="Slider2"
-    class="h-full w-full object-contain relative z-10"
-    format="png"/>
-</div>
-</div>
-
+      <!-- Imagen -->
+      <Image
+        src={B2}
+        alt="Slider2"
+        class="h-full w-full object-contain relative z-10"
+        format="png"
+      />
+    </div>
+  </div>
 
   <!-- Flechas -->
   <div class="hidden lg:flex absolute bottom-4 left-4 gap-2 z-10">
-    <button id="prev" class="bg-black/40 text-white p-2 sm:p-3 cursor-pointer">‹</button>
-    <button id="next" class="bg-black/40 text-white p-2 sm:p-3 cursor-pointer">›</button>
+    <button id="prev" class="bg-black/40 text-white p-2 sm:p-3 cursor-pointer"
+      >‹</button
+    >
+    <button id="next" class="bg-black/40 text-white p-2 sm:p-3 cursor-pointer"
+      >›</button
+    >
   </div>
 
   <!-- Indicadores -->
@@ -56,7 +65,10 @@ import B2 from "../../assets/B2.png";
 
 <script is:inline>
   const slides = document.getElementById("slides");
-  const indicators = [document.getElementById("ind1"), document.getElementById("ind2")];
+  const indicators = [
+    document.getElementById("ind1"),
+    document.getElementById("ind2"),
+  ];
   let index = 0;
 
   function updateSlide() {
@@ -73,7 +85,7 @@ import B2 from "../../assets/B2.png";
   });
 
   document.getElementById("prev").addEventListener("click", () => {
-    index = (index - 1 + 2) % 2; 
+    index = (index - 1 + 2) % 2;
     updateSlide();
   });
 
@@ -99,7 +111,8 @@ import B2 from "../../assets/B2.png";
   function handleSwipe() {
     const deltaX = endX - startX;
 
-    if (Math.abs(deltaX) > 50) { // umbral para evitar toques suaves
+    if (Math.abs(deltaX) > 50) {
+      // umbral para evitar toques suaves
       if (deltaX > 0) {
         // swipe hacia la derecha → retrocede
         index = (index - 1 + 2) % 2;
