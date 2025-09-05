@@ -4,32 +4,32 @@ import logo from "../../assets/logo.webp";
 ---
 
 <footer class="w-full bg-black text-white py-12 px-4 sm:px-8 md:px-16">
-  <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between gap-8">
+  <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between gap-12 md:gap-8">
 
     <!-- Columna 1: Logo + Slogan -->
-    <div class="flex flex-col items-center md:items-start">
+    <div class="flex flex-col items-center md:items-start text-center md:text-left">
       <a href="/" class="flex items-center space-x-2 flex-shrink-0 mb-4">
         <Image src={logo} alt="logo" class="h-10 w-10" format="png" />
         <span class="text-2xl font-bold tracking-widest">VINYL VOID</span>
       </a>
-      <p class="text-sm text-gray-400 text-center md:text-left">
+      <p class="text-sm text-gray-400">
         La música evita que caigas en la locura.
       </p>
     </div>
 
     <!-- Columna 2: Contactos -->
-    <div class="flex flex-col items-center md:items-start">
+    <div class="flex flex-col items-center md:items-start text-center md:text-left">
       <h3 class="font-semibold mb-2">Contactos</h3>
-      <ul class="text-sm space-y-1 text-gray-300 text-center md:text-left">
+      <ul class="text-sm space-y-1 text-gray-300">
         <li>tengosueño@gmail.com</li>
         <li>+51 982 424 192</li>
       </ul>
     </div>
 
     <!-- Columna 3: Redes Sociales -->
-    <div class="flex flex-col items-center md:items-start">
+    <div class="flex flex-col items-center md:items-start text-center md:text-left">
       <h3 class="font-semibold mb-2">Síguenos</h3>
-      <div class="flex gap-4">
+      <div class="flex gap-4 justify-center md:justify-start flex-wrap">
         <a href="#" class="hover:text-gray-200 transition">Facebook</a>
         <a href="#" class="hover:text-gray-200 transition">Instagram</a>
         <a href="#" class="hover:text-gray-200 transition">Twitter</a>
@@ -40,6 +40,6 @@ import logo from "../../assets/logo.webp";
 
   <!-- Línea de copyright -->
   <div class="mt-8 border-t border-gray-700 pt-4 text-center text-gray-500 text-sm">
-    &copy; {new Date().getFullYear()} Vinyl Void. Todos los derechos reservados.
+    &copy; {new Date().getFullYear()} By:Gabovoid. Todos los derechos reservados.
   </div>
 </footer>
