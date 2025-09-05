@@ -15,12 +15,12 @@ const products = [
 ---
 
 <section class="bg-[#1A1A1A] text-white py-25 relative">
-  <h2 class="text-center text-2xl font-bold font-sans mb-6">ÚLTIMOS LANZAMIENTOS</h2>
+  <h2 class="text-center text-2xl font-bold font-sans mb-6">PRODUCTOS DESTACADOS</h2>
 
   <!-- Botones solo visibles en desktop -->
   <div class="hidden lg:block lg:absolute left-0 -translate-y-1 z-10">
-    <button id="btn-leftNL" class="bg-[#161616] py-42 px-27 text-xl hover:bg-white hover:text-black transition disabled:opacity-40 cursor-pointer">
-      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <button id="btn-leftD" class="bg-[#161616] py-42 px-27 text-xl hover:bg-white hover:text-black transition disabled:opacity-40 cursor-pointer">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
         <path d="m12 19-7-7 7-7"/>
         <path d="M19 12H5"/>
       </svg>
@@ -28,8 +28,8 @@ const products = [
   </div>
 
   <div class="hidden lg:block lg:absolute right-0 -translate-y-1 z-10">
-    <button id="btn-rightNL" class="bg-[#161616] py-42 px-27 text-xl hover:bg-white hover:text-black transition disabled:opacity-40 cursor-pointer">
-      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <button id="btn-rightD" class="bg-[#161616] py-42 px-27 text-xl hover:bg-white hover:text-black transition disabled:opacity-40 cursor-pointer">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
         <path d="M5 12h14"/>
         <path d="m12 5 7 7-7 7"/>
       </svg>
@@ -38,7 +38,7 @@ const products = [
 
   <!-- Contenedor del slider -->
   <div class="overflow-x-auto lg:overflow-hidden max-w-5xl mx-auto mt-6 scrollbar-hide">
-    <div id="sliderNL" class="flex transition-transform duration-500 ease-in-out">
+    <div id="sliderD" class="flex transition-transform duration-500 ease-in-out">
       {products.map((product) => (
         <div class="relative w-1/2 lg:w-1/3 flex-shrink-0 px-3 text-center">
           <a href="">
@@ -47,11 +47,8 @@ const products = [
               <Image 
                 src={product.image} 
                 alt={product.title} 
-                class="w-full h-full object-cover" 
+                class="w-full h-full object-cover"
               />
-              <p class="absolute top-2 right-2 bg-white/80 text-black text-xs font-semibold px-2 py-1 rounded-md">
-                Novedad
-              </p>
             </div>
 
             <p class="mt-2 text-sm">{product.title}</p>
@@ -71,34 +68,32 @@ const products = [
   </div>
 </section>
 
-<div class="w-full h-[1px] bg-gradient-to-r from-transparent via-gray-400 to-transparent"></div>
-
 <script is:inline>
-const sliderNL = document.getElementById("sliderNL");
-const btnLeftNL = document.getElementById("btn-leftNL");
-const btnRightNL = document.getElementById("btn-rightNL");
+const sliderD = document.getElementById("sliderD");
+const btnLeftD = document.getElementById("btn-leftD");
+const btnRightD = document.getElementById("btn-rightD");
 
-if (btnLeftNL && btnRightNL) {
+if (btnLeftD && btnRightD) {
   let page = 0;
   const cardsVisible = 3;
-  const totalCards = sliderNL.children.length;
+  const totalCards = sliderD.children.length;
   const totalPages = Math.ceil(totalCards / cardsVisible);
 
-  function updateSliderNL() {
-    const cardWidth = sliderNL.children[0].offsetWidth;
-    sliderNL.style.transform = `translateX(-${page * cardWidth * cardsVisible}px)`;
-    btnLeftNL.disabled = page === 0;
-    btnRightNL.disabled = page === totalPages - 1;
+  function updateSliderD() {
+    const cardWidth = sliderD.children[0].offsetWidth;
+    sliderD.style.transform = `translateX(-${page * cardWidth * cardsVisible}px)`;
+    btnLeftD.disabled = page === 0;
+    btnRightD.disabled = page === totalPages - 1;
   }
 
-  btnLeftNL.addEventListener("click", () => {
-    if (page > 0) { page--; updateSliderNL(); }
+  btnLeftD.addEventListener("click", () => {
+    if (page > 0) { page--; updateSliderD(); }
   });
 
-  btnRightNL.addEventListener("click", () => {
-    if (page < totalPages - 1) { page++; updateSliderNL(); }
+  btnRightD.addEventListener("click", () => {
+    if (page < totalPages - 1) { page++; updateSliderD(); }
   });
 
-  updateSliderNL();
+  updateSliderD();
 }
 </script>
