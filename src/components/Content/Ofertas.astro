@@ -5,21 +5,21 @@ import thriller from "../../assets/Thriller.webp";
 import mbf from "../../assets/MBF.webp";
 
 const products = [
-  { id: 1, title: "Sayonara [2LP] (Silver Vinyl)", price: "S/ 190.00", image: sayonara },
-  { id: 2, title: "Thriller [LP]", price: "S/ 139.00", image: thriller },
-  { id: 3, title: "Man's Best Friend Vinilo Blanco Exclusivo", price: "S/ 199.00", image: mbf },
-  { id: 4, title: "Producto 4", price: "S/ 180.00", image: sayonara },
-  { id: 5, title: "Producto 5", price: "S/ 210.00", image: sayonara },
-  { id: 6, title: "Producto 6", price: "S/ 175.00", image: sayonara },
+  { id: 1, title: "Sayonara [2LP] (Silver Vinyl)", realprice: "S/ 190.00", price: "S/ 190.00", image: sayonara },
+  { id: 2, title: "Thriller [LP]", realprice: "S/ 139.00", price: "S/ 190.00", image: thriller },
+  { id: 3, title: "Man's Best Friend Vinilo Blanco Exclusivo", realprice: "S/ 199.00", price: "S/ 190.00", image: mbf },
+  { id: 4, title: "Producto 4", realprice: "S/ 180.00", price: "S/ 190.00", image: sayonara },
+  { id: 5, title: "Producto 5", realprice: "S/ 210.00", price: "S/ 190.00", image: sayonara },
+  { id: 6, title: "Producto 6", realprice: "S/ 175.00", price: "S/ 190.00", image: sayonara },
 ];
 ---
 
 <section class="bg-[#1A1A1A] text-white py-25 relative">
-  <h2 class="text-center text-2xl font-bold font-sans mb-6">ÚLTIMOS LANZAMIENTOS</h2>
+  <h2 class="text-center text-2xl font-bold font-sans mb-6">OFERTAS IMPERDIBLES</h2>
 
   <!-- Botones solo visibles en desktop -->
   <div class="hidden lg:block lg:absolute left-0 -translate-y-1 z-10">
-    <button id="btn-leftNL" class="bg-[#161616] py-42 px-27 text-xl hover:bg-white hover:text-black transition disabled:opacity-40 cursor-pointer">
+    <button id="btn-leftO" class="bg-[#161616] py-42 px-27 text-xl hover:bg-white hover:text-black transition disabled:opacity-40 cursor-pointer">
       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <path d="m12 19-7-7 7-7"/>
         <path d="M19 12H5"/>
@@ -28,7 +28,7 @@ const products = [
   </div>
 
   <div class="hidden lg:block lg:absolute right-0 -translate-y-1 z-10">
-    <button id="btn-rightNL" class="bg-[#161616] py-42 px-27 text-xl hover:bg-white hover:text-black transition disabled:opacity-40 cursor-pointer">
+    <button id="btn-rightO" class="bg-[#161616] py-42 px-27 text-xl hover:bg-white hover:text-black transition disabled:opacity-40 cursor-pointer">
       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <path d="M5 12h14"/>
         <path d="m12 5 7 7-7 7"/>
@@ -38,7 +38,7 @@ const products = [
 
   <!-- Contenedor del slider -->
   <div class="overflow-x-auto lg:overflow-hidden max-w-5xl mx-auto mt-6 scrollbar-hide">
-    <div id="sliderNL" class="flex transition-transform duration-500 ease-in-out">
+    <div id="sliderO" class="flex transition-transform duration-500 ease-in-out">
       {products.map((product) => (
         <div class="relative w-1/2 lg:w-1/3 flex-shrink-0 px-3 text-center">
           <a href="">
@@ -49,13 +49,15 @@ const products = [
                 alt={product.title} 
                 class="w-full h-full object-cover" 
               />
-              <p class="absolute top-2 right-2 bg-white/80 text-black text-xs font-semibold px-2 py-1 rounded-md">
-                Novedad
+              <p class="absolute top-2 right-2 bg-red-600 text-black text-xs font-semibold px-2 py-1 rounded-md">
+                Oferta
               </p>
             </div>
-
             <p class="mt-2 text-sm text-center truncate w-full">{product.title}</p>
-            <p class="font-semibold text-sm">{product.price}</p>
+            <div class="flex items-center justify-center gap-2">
+                <p class="font-semibold text-sm">{product.price}</p>
+                <p class="font-light text-sm line-through">{product.realprice}</p>
+            </div>
           </a>
 
           <button class="mt-3 w-full flex items-center justify-center gap-2 bg-white hover:bg-[#4d5645] text-black hover:text-white font-semibold py-2 rounded-lg transition cursor-pointer">
@@ -74,31 +76,31 @@ const products = [
 <div class="w-full h-[1px] bg-gradient-to-r from-transparent via-gray-400 to-transparent"></div>
 
 <script is:inline>
-const sliderNL = document.getElementById("sliderNL");
-const btnLeftNL = document.getElementById("btn-leftNL");
-const btnRightNL = document.getElementById("btn-rightNL");
+const sliderO = document.getElementById("sliderO");
+const btnLeftO = document.getElementById("btn-leftO");
+const btnRightO = document.getElementById("btn-rightO");
 
-if (btnLeftNL && btnRightNL) {
+if (btnLeftO && btnRightO) {
   let page = 0;
   const cardsVisible = 3;
-  const totalCards = sliderNL.children.length;
+  const totalCards = sliderO.children.length;
   const totalPages = Math.ceil(totalCards / cardsVisible);
 
-  function updateSliderNL() {
-    const cardWidth = sliderNL.children[0].offsetWidth;
-    sliderNL.style.transform = `translateX(-${page * cardWidth * cardsVisible}px)`;
-    btnLeftNL.disabled = page === 0;
-    btnRightNL.disabled = page === totalPages - 1;
+  function updateSliderO() {
+    const cardWidth = sliderO.children[0].offsetWidth;
+    sliderO.style.transform = `translateX(-${page * cardWidth * cardsVisible}px)`;
+    btnLeftO.disabled = page === 0;
+    btnRightO.disabled = page === totalPages - 1;
   }
 
-  btnLeftNL.addEventListener("click", () => {
-    if (page > 0) { page--; updateSliderNL(); }
+  btnLeftO.addEventListener("click", () => {
+    if (page > 0) { page--; updateSliderO(); }
   });
 
-  btnRightNL.addEventListener("click", () => {
-    if (page < totalPages - 1) { page++; updateSliderNL(); }
+  btnRightO.addEventListener("click", () => {
+    if (page < totalPages - 1) { page++; updateSliderO(); }
   });
 
-  updateSliderNL();
+  updateSliderO();
 }
 </script>
