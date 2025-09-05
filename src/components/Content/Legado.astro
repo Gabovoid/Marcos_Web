@@ -1,0 +1,76 @@
+---
+import { Image } from "astro:assets";
+import promoDefault from "../../assets/BannerLegado.webp";
+import disco1 from "../../assets/Thriller.webp";
+import disco2 from "../../assets/BIB.webp";
+import disco3 from "../../assets/TheDark.webp";
+
+const discos = [
+  {
+    id: 1,
+    titulo: "Thriller",
+    imagen: disco1,
+    historia: "Este es el vinilo más vendido de la historia, con millones de copias alrededor del mundo."
+  },
+  {
+    id: 2,
+    titulo: "BACK IN BLACK",
+    imagen: disco2,
+    historia: "Un clásico que marcó generaciones, con ventas históricas a nivel mundial."
+  },
+  {
+    id: 3,
+    titulo: "The Dark Side of The Moon",
+    imagen: disco3,
+    historia: "Reconocido por su innovación y ventas récord, ocupa el tercer puesto."
+  },
+];
+---
+
+<div class="w-full bg-[#1A1A1A] text-white py-16 flex flex-col items-center">
+
+  <!-- Título -->
+  <h2 class="text-center text-2xl sm:text-3xl md:text-4xl font-bold font-sans mb-6">LEGADO MUSICAL</h2>
+
+  <!-- Sección promocional -->
+  <div id="promo" class="relative w-[90%] sm:w-3/4 md:w-2/3 lg:w-1/2 h-48 sm:h-64 md:h-80 rounded-xl overflow-hidden flex flex-col justify-center items-center text-center p-4 transition">
+    
+    <!-- Imagen de fondo -->
+    <div id="promo-bg" 
+         class="absolute inset-0 bg-cover bg-center transition-all duration-500" 
+         style={`background-image: url(${promoDefault.src});`}>
+    </div>
+
+    <!-- Capa oscura -->
+    <div class="absolute inset-0 bg-black/40"></div>
+
+    <!-- Contenido dinámico -->
+    <div id="promo-content" class="relative z-10 hidden px-2">
+      <h3 id="promo-title" class="text-lg sm:text-xl md:text-2xl font-bold mb-2"></h3>
+      <p id="promo-text" class="text-sm sm:text-base md:text-lg"></p>
+    </div>
+  </div>
+
+  <!-- Galería de vinilos -->
+  <div class="mt-8 flex flex-row flex-nowrap gap-4 sm:gap-6 md:gap-8 overflow-x-auto sm:overflow-x-visible px-2 sm:px-0">
+    {discos.map((disco) => (
+      <button
+        class="relative flex-shrink-0 rounded-lg overflow-hidden transition-transform hover:scale-105 cursor-pointer w-32 h-32 sm:w-44 sm:h-44 md:w-48 md:h-48"
+        onclick={`const promoBg = document.getElementById('promo-bg');
+                  promoBg.style.backgroundImage = 'url(${disco.imagen.src})';
+                  promoBg.classList.add('blur-sm');
+                  
+                  document.getElementById('promo-content').classList.remove('hidden');
+                  document.getElementById('promo-title').innerText='${disco.titulo}';
+                  document.getElementById('promo-text').innerText='${disco.historia}';`}
+      >
+        <Image 
+          src={disco.imagen} 
+          alt={disco.titulo} 
+          class="w-full h-full object-cover rounded-lg"
+        />
+      </button>
+    ))}
+  </div>
+
+</div>
