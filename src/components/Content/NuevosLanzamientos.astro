@@ -1,21 +1,24 @@
 ---
 import { Image } from "astro:assets";
-import sayonara from "../../assets/Sayonara.webp";
-import thriller from "../../assets/Thriller.webp";
 import mbf from "../../assets/MBF.webp";
+import pmusic from "../../assets/PMusic.webp";
+import loveislike from "../../assets/Loveislike.webp";
+import play from "../../assets/Play.webp";
+import amatter from "../../assets/amatter.webp";
+import satirologia from "../../assets/Satirologia.webp";
 
 const products = [
-  { id: 1, title: "Sayonara [2LP] (Silver Vinyl)", price: "S/ 190.00", image: sayonara },
-  { id: 2, title: "Thriller [LP]", price: "S/ 139.00", image: thriller },
-  { id: 3, title: "Man's Best Friend Vinilo Blanco Exclusivo", price: "S/ 199.00", image: mbf },
-  { id: 4, title: "Producto 4", price: "S/ 180.00", image: sayonara },
-  { id: 5, title: "Producto 5", price: "S/ 210.00", image: sayonara },
-  { id: 6, title: "Producto 6", price: "S/ 175.00", image: sayonara },
+  { id: 1, title: "Man's Best Friend Vinilo Blanco Exclusivo", price: "S/ 215.00", image: mbf },
+  { id: 2, title: "private music [LP - Fog]", price: "S/ 106.00", image: pmusic },
+  { id: 3, title: "Vinilo Love Is Like", price: "S/ 140.00", image: loveislike },
+  { id: 4, title: "Play Pink & White LP (Exclusive)", price: "S/ 180.00", image: play },
+  { id: 5, title: "A Matter Of Time Vinyl LP", price: "S/ 210.00", image: amatter },
+  { id: 6, title: "Satirologia vol.3 1lp", price: "S/ 125.00", image: satirologia },
 ];
 ---
 
 <section class="bg-[#1A1A1A] text-white py-25 relative">
-  <h2 class="text-center text-2xl font-bold font-sans mb-6">ÚLTIMOS LANZAMIENTOS</h2>
+  <h2 class="text-center text-2xl font-bold font-sans mb-6">RECIÉN LLEGADOS</h2>
 
   <!-- Botones solo visibles en desktop -->
   <div class="hidden lg:block lg:absolute left-0 -translate-y-1 z-10">
