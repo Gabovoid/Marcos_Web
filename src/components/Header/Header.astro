@@ -1,20 +1,20 @@
 ---
 import { Image } from "astro:assets";
-import logo from "../../assets/logo.webp";
+import logo from "../../assets/logo.png";
 ---
 
 <header class="bg-black text-white flex items-center justify-between border-b border-white px-4 sm:px-8 py-5 fixed top-0 left-0 right-0 z-50">
-  <!-- Logo -->
+  <!-- logo -->
   <a href="/" class="flex items-center space-x-2 flex-shrink-0">
     <Image
       src={logo}
       alt="logo"
       class="h-10 w-10"
       format="png"/>
-    <span class="text-2xl font-bold tracking-widest">VINYL VOID</span>
+    <span class="text-xl sm:text-2xl font-bold tracking-widest">VINYL VOID</span>
   </a>
 
-  <!-- Navegación (oculta en mobile) -->
+  <!-- nav-->
   <nav class="hidden lg:block text-1xl">
     <ul class="flex space-x-5 font-semibold">
       <li><a href="/" class="hover:text-gray-400">Inicio</a></li>
@@ -23,32 +23,32 @@ import logo from "../../assets/logo.webp";
     </ul>
   </nav>
 
-  <!-- Grupo de botones-->
-  <div class="flex items-center space-x-3 sm:space-x-4 md:space-x-6">
+  <!--botones-->
+  <div class="flex items-center space-x-2 sm:space-x-1 md:space-x-4">
     <!-- Buscador -->
     <div class="hidden lg:flex items-center border-b border-white w-40 sm:w-56 space-x-2">
       <input
         type="text"
         placeholder="Buscar..."
         class="bg-transparent text-white placeholder-gray-400 focus:outline-none w-full px-2"/>
-      <button class="rounded-full p-3 cursor-pointer hover:bg-white hover:text-black transition">
-        <!-- Lupa -->
+      <button class="rounded-full p-3 sm:p-2 cursor-pointer hover:bg-white hover:text-black transition">
+        <!--lupa -->
         <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 stroke-[2]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/>
         </svg>
       </button>
     </div>
 
-    <!-- Usuario -->
-    <button class="rounded-full p-3 cursor-pointer hover:bg-white hover:text-black transition">
+    <!-- Uuario -->
+    <button class="rounded-full p-3 sm:p-2 cursor-pointer hover:bg-white hover:text-black transition">
       <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 stroke-[2]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
         <circle cx="12" cy="7" r="4"/>
       </svg>
     </button>
 
-    <!-- Carrito -->
-    <button class="rounded-full p-3 cursor-pointer hover:bg-white hover:text-black transition">
+    <!-- carrito -->
+    <button class="rounded-full p-3 sm:p-2 cursor-pointer hover:bg-white hover:text-black transition">
       <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 stroke-[2]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/>
         <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/>
@@ -56,7 +56,7 @@ import logo from "../../assets/logo.webp";
     </button>
 
     <!-- Botón hamburguesa -->
-    <button id="menu-toggle" class="lg:hidden text-2xl focus:outline-none rounded-full p-3 cursor-pointer hover:bg-white hover:text-black transition">
+    <button id="menu-toggle" class="lg:hidden text-2xl focus:outline-none rounded-full p-3 sm:p-2 cursor-pointer hover:bg-white hover:text-black transition">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" class="w-6 h-6">
         <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
         </svg>
@@ -64,7 +64,7 @@ import logo from "../../assets/logo.webp";
   </div>
 </header>
 
-<!-- Menu fono (oculto por defecto) -->
+<!-- sub-menu fono (oculto por defecto) -->
 <nav
     id="submenu" class="hidden flex-col space-y-4 px-6 pb-4 bg-black lg:hidden text-lg font-semibold">
     <a href="/" class="hover:text-gray-400">Inicio</a>

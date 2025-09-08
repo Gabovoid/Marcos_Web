@@ -2,6 +2,8 @@
 import Header from "../components/Header/Header.astro";
 import "../styles/global.css";
 import Footer from "../components/Footer/Footer.astro";
+
+const { title } = Astro.props;
 ---
 
 <!doctype html>
@@ -9,20 +11,19 @@ import Footer from "../components/Footer/Footer.astro";
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<link rel="shortcut icon" href="/logo.png" type="image/png" />
 		<meta name="generator" content={Astro.generator} />
-		<title>hola</title>
+		<title>{title ? title : "Vinyl Void"}</title>
 	</head>
 	<body>
 		<Header />
 		<div class="flex flex-col min-h-screen">
-			<!-- Contenido principal -->
+			
 			<main class="flex-1">
 				<slot />
-				<!-- Aquí va el contenido de cada página -->
+				
 			</main>
-
-			<!-- Footer siempre al final -->
+		
 			<Footer />
 		</div>
 	</body>
