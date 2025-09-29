@@ -1,0 +1,61 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { vinilos } from "../../data/vinilos.js";
+import RImage from "../../pages/productos/RImage.astro";
+
+export async function getStaticPaths() {
+  return vinilos.map((v) => ({
+    params: { slug: v.slug },
+    props: { vinilo: v },
+  }));
+}
+
+const { vinilo } = Astro.props;
+---
+
+<Layout title={vinilo.nombre}>
+  <section class="max-w-4xl mt-[80px] mx-auto px-4 py-10">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
+      <div class="w-full aspect-square overflow-hidden rounded-lg shadow">
+        <picture>
+            <RImage
+              src={vinilo.imagen || "/placeholder.webp"}
+              alt={vinilo.nombre}
+              class="w-full h-full object-cover"
+              width={500}
+              height={500}
+              format="webp"
+            />
+          </picture>
+      </div>
+
+      <div>
+        <h1 class="text-white text-2xl py-3 font-bold">{vinilo.nombre}</h1>
+        <p class="text-white text-lg">Artista: {vinilo.artista}</p>
+        <p class="text-white">Precio: </p>
+        <p class="text-white text-3xl font-semibold">{vinilo.precio}</p>
+
+        <div class="py-5">
+          <button
+            class="mt-3 w-full flex items-center justify-center gap-2 bg-white hover:bg-[#4d5645] text-black hover:text-white font-semibold py-2 rounded-lg transition cursor-pointer">
+            Agregar
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 stroke-[2]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><circle cx="8" cy="21" r="1"></circle><circle cx="19" cy="21" r="1"></circle>
+              <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"></path>
+            </svg>
+          </button>
+          <button
+            class="mt-3 w-full flex items-center justify-center gap-2 bg-white hover:bg-[#4d5645] text-black hover:text-white font-semibold py-2 rounded-lg transition cursor-pointer">
+            Comprar Ahora
+          </button>
+        </div>  
+
+        <p class="text-white py-2 ">Género: {vinilo.genero} </p>
+
+        <h2 class="text-white py-3 text-lg font-semibold mt-6">Tracklist</h2>
+        <ol class="list-decimal list-inside space-y-1 mt-2 text-white">
+          {vinilo.tracklist.map((cancion) => <li>{cancion}</li>)}
+        </ol>
+      </div>
+    </div>
+  </section>
+</Layout>

@@ -1,0 +1,21 @@
+---
+const {
+  src = "",
+  alt = "Imagen",
+  width = 500,
+  height = 500,
+  class: className = "",
+  loading = "lazy",
+} = Astro.props;
+---
+
+<picture>
+  <img
+    src={src}
+    alt={alt}
+    width={width}
+    height={height}
+    loading={loading}
+    class={`object-cover ${className}`}
+  />
+</picture>

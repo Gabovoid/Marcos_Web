@@ -11,7 +11,7 @@ import logo from "../../assets/Logo.png";
       alt="logo"
       class="h-10 w-10"
       format="png"/>
-    <span class="text-xl sm:text-2xl font-bold tracking-widest">VINYL VOID</span>
+    <p class="text-xl sm:text-2xl font-bold tracking-widest">VINYL VOID</p>
   </a>
 
   <!-- nav-->
@@ -66,33 +66,39 @@ import logo from "../../assets/Logo.png";
 
 <!-- sub-menu fono (oculto por defecto) -->
 <nav
-    id="submenu" class="hidden flex-col space-y-4 px-6 pb-4 bg-black lg:hidden text-lg font-semibold">
-    <a href="/" class="hover:text-gray-400">Inicio</a>
-    <a href="/productos" class="hover:text-gray-400">Productos</a>
-    <a href="/about" class="hover:text-gray-400">Nosotros</a>
-    <div class="flex items-center border-b border-white w-full">
-        <input
-            type="text"
-            placeholder="Buscar..."
-            class="bg-transparent text-white placeholder-gray-400 focus:outline-none w-full px-2"
-        />
-        <button
-            class="border-white rounded-full p-2 cursor-pointer hover:bg-white hover:text-black transition"
-        >
-            <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                class="lucide lucide-search-icon lucide-search"
-                ><path d="m21 21-4.34-4.34"></path><circle cx="11" cy="11" r="8"
-                ></circle></svg
-            >
-        </button>
-    </div>
+  id="submenu"
+  class="hidden fixed top-0 left-0 w-full h-full bg-black/95 flex-col space-y-3 px-8 pt-24 pb-6 z-40 lg:hidden text-xl font-semibold transition-all duration-300 ease-in-out">
+  
+  <a href="/" class="text-white hover:text-gray-400">Inicio</a>
+  <a href="/productos" class="text-white hover:text-gray-400">Productos</a>
+  <a href="/about" class="text-white hover:text-gray-400">Nosotros</a>
+
+  <!-- Buscador -->
+  <div class="flex items-center border-b border-white w-full">
+    <input
+      type="text"
+      placeholder="Buscar..."
+      class="bg-transparent text-white placeholder-gray-400 focus:outline-none w-full px-2"/>
+    <button class="border-white rounded-full py-5 cursor-pointer hover:bg-white hover:text-black transition">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" 
+           viewBox="0 0 24 24" fill="none" stroke="currentColor" 
+           stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="m21 21-4.34-4.34"></path>
+        <circle cx="11" cy="11" r="8"></circle>
+      </svg>
+    </button>
+  </div>
 </nav>
+
+<script is:inline>
+  document.addEventListener("DOMContentLoaded", () => {
+    const toggleBtn = document.getElementById("menu-toggle");
+    const submenu = document.getElementById("submenu");
+
+    toggleBtn.addEventListener("click", () => {
+      // Alterna visibilidad SOLO en mobile
+      submenu.classList.toggle("hidden");
+      submenu.classList.toggle("flex");
+    });
+  });
+</script>

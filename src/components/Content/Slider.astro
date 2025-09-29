@@ -4,12 +4,11 @@ import B1 from "../../assets/B1.png";
 import B2 from "../../assets/B2.png";
 ---
 <section class="relative w-full overflow-hidden mt-[80px] border-b border-white">
-  
-  <!-- Slider -->
+  <!-- slider principal -->
   <div
     id="slides"
     class="flex w-[200%] transition-transform duration-700 ease-in-out">
-    <!-- Slide 1 -->
+    <!--1-->
     <div class="relative w-1/2 shrink-0 aspect-[16/9] sm:aspect-[21/9]">
       <!-- Fondo -->
       <div class="absolute inset-0 bg-black"></div>
@@ -20,7 +19,7 @@ import B2 from "../../assets/B2.png";
         class="h-full w-full object-contain relative z-10"
         format="png"/>
     </div>
-    <!-- Slide 2 -->
+    <!--2-->
     <div class="relative w-1/2 shrink-0 aspect-[16/9] sm:aspect-[21/9]">
       <!-- Fondo -->
       <div
@@ -35,17 +34,12 @@ import B2 from "../../assets/B2.png";
     </div>
   </div>
 
-  <!-- Flechas -->
+  <!-- flechas -->
   <div class="hidden lg:flex absolute bottom-4 left-4 gap-2 z-10">
-    <button id="prev" class="bg-black/40 text-white p-2 sm:p-3 cursor-pointer"
-      >‹</button
-    >
-    <button id="next" class="bg-black/40 text-white p-2 sm:p-3 cursor-pointer"
-      >›</button
-    >
+    <button id="prev" class="bg-black/40 text-white p-2 sm:p-3 cursor-pointer">‹</button>
+    <button id="next" class="bg-black/40 text-white p-2 sm:p-3 cursor-pointer">›</button>
   </div>
-
-  <!-- Indicadores -->
+  <!-- indicadores -->
   <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-3 z-10">
     <div class="w-6 sm:w-10 h-0.5 rounded-full bg-white" id="ind1"></div>
     <div class="w-6 sm:w-10 h-0.5 rounded-full bg-white" id="ind2"></div>
