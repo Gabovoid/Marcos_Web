@@ -8,12 +8,12 @@ import abbeyroad from "../../assets/AbbeyRoad.webp";
 import madrileño from "../../assets/Madrileño.webp";
 
 const products = [
-  { id: 1, title: "Sayonara [2LP] (Silver Vinyl)", price: "S/ 190.00", image: sayonara },
-  { id: 2, title: "Thriller [LP]", price: "S/ 165.00", image: thriller },
-  { id: 3, title: "Nevermind Vinilo", price: "S/ 179.00", image: nevermind },
-  { id: 4, title: "Abbey Road [LP]", price: "S/ 179.00", image: abbeyroad },
-  { id: 5, title: "Graduation Vinilo", price: "S/ 246.00", image: graduation },
-  { id: 6, title: "El Madrileño Vinilo", price: "S/ 145.00", image: madrileño },
+  { id: 1, title: "Sayonara Finales Alternos [2LP] (Silver Vinyl)", price: "S/ 190.00", image: sayonara, slug:"sayonara" },
+  { id: 2, title: "Thriller [LP]", price: "S/ 165.00", image: thriller, slug:"thriller"  },
+  { id: 3, title: "Nevermind Vinilo", price: "S/ 179.00", image: nevermind, slug:"nevermind"  },
+  { id: 4, title: "Abbey Road [LP]", price: "S/ 179.00", image: abbeyroad, slug:"abbey-road" },
+  { id: 5, title: "Graduation Vinilo", price: "S/ 246.00", image: graduation, slug:"graduation"  },
+  { id: 6, title: "El Madrileño Vinilo", price: "S/ 145.00", image: madrileño, slug:"el-madrileño"  },
 ];
 ---
 
@@ -44,7 +44,7 @@ const products = [
     <div id="sliderD" class="flex transition-transform duration-500 ease-in-out">
       {products.map((product) => (
         <div class="relative w-1/2 lg:w-1/3 flex-shrink-0 px-3 text-center">
-          <a href="">
+          <a href={`/productos/${product.slug}`}>
             <div class="relative aspect-square hover:scale-105 w-full overflow-hidden bg-black rounded-lg shadow">
               <Image 
                 src={product.image} 

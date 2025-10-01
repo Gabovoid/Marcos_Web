@@ -49,9 +49,9 @@ const { vinilo } = Astro.props;
           </button>
         </div>  
 
-        <p class="text-white py-2 ">Género: {vinilo.genero} </p>
+        <p class="text-white py-2 ">Género: {vinilo.genero}.</p>
 
-        <h2 class="text-white py-3 text-lg font-semibold mt-6">Tracklist</h2>
+        <h2 class="text-white py-3 text-lg font-semibold mt-6">Tracklist:</h2>
         <ol class="list-decimal list-inside space-y-1 mt-2 text-white">
           {vinilo.tracklist.map((cancion) => <li>{cancion}</li>)}
         </ol>

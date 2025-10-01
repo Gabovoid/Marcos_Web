@@ -65,10 +65,10 @@ export const vinilos = [
 
   {
     id: 4,
-    nombre: "Sayonara Finales Alternos [LP]",
+    nombre: "Sayonara Finales Alternos [2LP] (Silver Vinyl)",
     slug: "sayonara",
     artista: "Alvaro Diaz",
-    precio: "S/ 165.00",
+    precio: "S/ 190.00",
     imagen: "/imagen/Sayonara/Sayonara.webp",
     genero: "	Reguetón, Hip hop latino",
     tracklist: [
@@ -262,7 +262,7 @@ export const vinilos = [
   artista: "Deftones",
   precio: "S/ 179.00",
   imagen: "../imagen/PMusic/PMusic.webp",
-  genero: "private music [LP - Fog]",
+  genero: "Metal",
   tracklist: [
       "My Mind Is a Mountain",
       "Locked Club",
@@ -307,7 +307,7 @@ export const vinilos = [
   artista: "Maroon 5",
   precio: "S/ 140.00",
   imagen: "../imagen/Loveislike/Loveislike.webp",
-  genero: " Pop, Hip hop, R&B contemporáneo",
+  genero: "Pop, Hip hop, R&B contemporáneo",
   tracklist: [
       "Hideaway",
       "Love Is Like",
@@ -326,7 +326,7 @@ export const vinilos = [
   nombre: "Play Pink & White LP (Exclusive)",
   slug: "play",
   artista: "Ed Sheeran",
-  precio: "S/ 110.00",
+  precio: "S/ 180.00",
   imagen: "../imagen/Play/Play.webp",
   genero: "Pop",
   tracklist: [
@@ -350,7 +350,7 @@ export const vinilos = [
   nombre: "El Madrileño Vinilo",
   slug: "el-madrileño",
   artista: "C. Tangana",
-  precio: "S/ 110.00",
+  precio: "S/ 145.00",
   imagen: "../imagen/Madrileño/Madrileño.webp",
   genero: "R&B alternativo",
   tracklist: [
@@ -446,7 +446,7 @@ export const vinilos = [
   id: 19,
   nombre: "Abbey Road [LP]",
   slug: "abbey-road",
-  artista: "Nirvana",
+  artista: "The Beatles",
   precio: "S/ 179.00",
   imagen: "../imagen/AbbeyRoad/AbbeyRoad.webp",
   genero: "Rock and roll, Pop rock, Hard rock, Rock progresivo, Blues rock, Art rock",
@@ -474,7 +474,7 @@ export const vinilos = [
   id: 20,
   nombre: "Live forever (LP-Vinilo)",
   slug: "live-forever",
-  artista: "Nirvana",
+  artista: "Lil Peep",
   precio: "S/ 106.00",
   imagen: "../imagen/LiveForever/LiveForever.webp",
   genero: "Hip hop, Trap, Cloud rap",

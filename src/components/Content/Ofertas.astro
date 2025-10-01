@@ -8,12 +8,12 @@ import liveforever from "../../assets/LiveForever.webp";
 import papota from "../../assets/Papota.webp";
 
 const products = [
-  { id: 1, title: "DATA Limited Edition (Alternate Cover)", realprice: "S/ 118.00", price: "S/ 98.00", image: data },
-  { id: 2, title: "Nectar (Colored Vinyl) Vinyl 2LP", realprice: "S/ 195.00", price: "S/ 173.00", image: nectar },
-  { id: 3, title: "Felicilandia 2LP Vinyl", realprice: "S/ 130.00", price: "S/ 108.00", image: felicilandia },
-  { id: 4, title: "Bocanada [2LP]", realprice: "S/ 219.00", price: "S/ 174.00", image: bocanada },
-  { id: 5, title: "Live forever (LP-Vinilo)", realprice: "S/ 106.00", price: "S/ 88.00", image: liveforever },
-  { id: 6, title: "Papota (Vinilo de color baby pink)", realprice: "S/ 179.00", price: "S/ 152.00", image: papota },
+  { id: 1, title: "DATA Limited Edition (Alternate Cover)", realprice: "S/ 118.00", price: "S/ 98.00", image: data, slug:"data" },
+  { id: 2, title: "Nectar (Colored Vinyl) Vinyl 2LP", realprice: "S/ 195.00", price: "S/ 173.00", image: nectar, slug:"nectar" },
+  { id: 3, title: "Felicilandia 2LP Vinyl", realprice: "S/ 130.00", price: "S/ 108.00", image: felicilandia, slug:"felicilandia" },
+  { id: 4, title: "Bocanada [2LP]", realprice: "S/ 219.00", price: "S/ 174.00", image: bocanada, slug:"bocanada" },
+  { id: 5, title: "Live forever (LP-Vinilo)", realprice: "S/ 106.00", price: "S/ 88.00", image: liveforever, slug:"live-forever" },
+  { id: 6, title: "Papota (Vinilo de color baby pink)", realprice: "S/ 179.00", price: "S/ 152.00", image: papota, slug:"papota" },
 ];
 ---
 
@@ -44,7 +44,7 @@ const products = [
     <div id="sliderO" class="flex transition-transform duration-500 ease-in-out">
       {products.map((product) => (
         <div class="relative w-1/2 lg:w-1/3 flex-shrink-0 px-3 text-center">
-          <a href="">
+          <a href={`/productos/${product.slug}`}>
 
             <div class="relative aspect-square hover:scale-105 w-full overflow-hidden bg-black rounded-lg shadow">
               <Image 
