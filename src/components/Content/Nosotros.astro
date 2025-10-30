@@ -1,0 +1,187 @@
+---
+import { Image } from "astro:assets";
+import Vinilo from "../../assets/Vinilooo.webp";
+import Palo from "../../assets/Palo.png";
+import Foto from "../../assets/Presentacion.webp";
+import aboutText from "../../data/about.js";
+---
+
+<section class="bg-[#1A1A1A] text-white py-25 relative">
+  <div class="text-center mb-12 mt-10">
+    <h2 class="text-4xl font-bold text-white tracking-tight mb-2">DETRÁS DEL DISCO</h2>
+    
+  </div>
+
+  <div class="w-100% h-100hvp flex flex-row">
+    <div class="relative ml-10 mt-2 w-[800px] h-1/2">
+      <div class="w-[380px] flex justify-end items-end relative z-10">
+        <button
+          id="playBtn"
+          class="border-2 px-4 py-2 rounded-full transition transform hover:scale-105 cursor-pointer relative z-10 w-[130px] text-center">
+          Descúbrenos
+        </button>
+      </div>
+
+      <!-- Vinilo -->
+      <Image
+        id="vinilo"
+        src={Vinilo}
+        alt="Cargado..."
+        class="w-[650px] h-[700px] object-cover filter brightness-75 grayscale"
+      />
+
+      <!-- Palo -->
+      <div
+        class="w-[450px] h-[500px] origin-top-right absolute top-30 right-0"
+        id="palo"
+      >
+        <Image
+          id="brazo"
+          src={Palo}
+          alt="Cargado..."
+          class="w-full h-full filter brightness-75 grayscale brazo-inicial"
+        />
+      </div>
+    </div>
+
+    <div class="w-[640px] flex-1 mr-10 p-8 rounded-2xl bg-gradient-to-br from-zinc-900 to-black mt-10 border border-zinc-800 shadow-2xl">
+        <div class="mb-3 h-[200px]">
+          <h1 class="text-white text-[25px] font-bold mb-1 tracking-tight">¿Quiénes somos?</h1>
+          <p id="quienes" class="text-gray-300 leading-relaxed text-[16px] h-[180px] overflow-hidden text-justify"></p>
+        </div>
+        <div class="mb-3 h-[250px]">
+          <h1 class="text-white text-[25px] font-bold mb-1 tracking-tight">Nuestra historia</h1>
+          <p id="historia" class="text-gray-300 leading-relaxed text-[16px] h-[210px] overflow-hidden text-justify"></p>
+        </div>
+        <div class="mb-3 h-[140px]">
+          <h1 class="text-white text-[25px] font-bold mb-1 tracking-tight">Misión</h1>
+          <p id="mision" class="text-gray-300 leading-relaxed text-[16px] h-[80px] overflow-hidden text-justify"></p>
+        </div>
+        <div class="h-[140px]">
+          <h1 class="text-white text-[25px] font-bold mb-1 tracking-tight">Visión</h1>
+          <p id="vision" class="text-gray-300 leading-relaxed text-[16px] h-[80px] overflow-hidden text-justify"></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="w-full h-[1px] bg-gradient-to-r from-transparent via-gray-400 to-transparent"></div>
+
+<section class="bg-[#1A1A1A] py-20">
+  <!-- Título de la sección -->
+  <div class="text-center mb-12">
+    <h2 class="text-4xl font-bold text-white tracking-tight mb-2">DETRÁS DEL CÓDIGO</h2>
+    <p class="text-gray-400 text-lg">El cerebro detrás de Vinyl Void</p>
+  </div>
+
+  <div class="flex items-center justify-center">
+    <div class="max-w-sm bg-gradient-to-br from-zinc-900 to-black border border-zinc-800 rounded-2xl shadow-2xl overflow-hidden">
+      <a href="#" class="block">
+        <Image
+          src={Foto}
+          alt="Developer"
+          class="w-full h-64 object-cover hover:grayscale-0 hover:brightness-100 transition duration-300"
+        />
+      </a>
+      <div class="p-6">
+        <div class="mb-3">
+          <span class="inline-block bg-zinc-700 text-gray-300 text-xs px-3 py-1 rounded-full mb-3">Web Developer</span>
+          <h5 class="text-2xl font-bold tracking-tight text-white hover:text-gray-300 transition">Daren Gabriel Flores Barba</h5>
+        </div>
+        <p class="mb-4 text-gray-400 leading-relaxed">Apasionado por crear experiencias digitales únicas. Transformando ideas en código y diseño.</p>
+        <div class="flex gap-3">
+          <a href="https://github.com/Gabovoid" target="_blank" class="inline-flex items-center px-4 py-2 text-sm font-medium text-center text-white bg-zinc-700 rounded-lg hover:bg-zinc-600 focus:ring-4 focus:outline-none focus:ring-zinc-500 transition transform hover:scale-105">
+            GitHub
+            <svg class="w-4 h-4 ms-2" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.385-1.335-1.755-1.335-1.755-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 21.795 24 17.295 24 12c0-6.63-5.37-12-12-12"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script is:inline define:vars={{ aboutText }}>
+  document.addEventListener("DOMContentLoaded", () => {
+    const playBtn = document.getElementById("playBtn");
+    const brazo = document.getElementById("brazo");
+    const vinilo = document.getElementById("vinilo");
+    
+    const quienes = document.getElementById("quienes");
+    const historia = document.getElementById("historia");
+    const mision = document.getElementById("mision");
+    const vision = document.getElementById("vision");
+
+    let tocando = false;
+    let escribiendo = false;
+
+    function escribirTexto(elemento, texto, velocidad = 30) {
+      return new Promise((resolve) => {
+        let i = 0;
+        elemento.textContent = "";
+        
+        const intervalo = setInterval(() => {
+          if (i < texto.length) {
+            elemento.textContent += texto.charAt(i);
+            i++;
+          } else {
+            clearInterval(intervalo);
+            resolve();
+          }
+        }, velocidad);
+      });
+    }
+
+    async function escribirTodosLosTextos() {
+      if (escribiendo) return;
+      escribiendo = true;
+      
+      playBtn.style.opacity = "0.5";
+      playBtn.style.pointerEvents = "none";
+      
+      await escribirTexto(quienes, aboutText.desc, 20);
+      await escribirTexto(historia, aboutText.historia, 20);
+      await escribirTexto(mision, aboutText.mision, 20);
+      await escribirTexto(vision, aboutText.vision, 20);
+      
+      playBtn.style.opacity = "1";
+      playBtn.style.pointerEvents = "auto";
+      playBtn.textContent = "Detener";
+      
+      escribiendo = false;
+    }
+
+    playBtn.addEventListener("click", () => {
+      if (!tocando) {
+        tocando = true;
+        brazo.classList.remove("brazo-saliendo");
+        brazo.classList.add("brazo-entrando");
+        vinilo.classList.add("vinilo-animado");
+        vinilo.classList.add("delay-rotacion");
+        
+        if (!escribiendo && quienes.textContent === "") {
+          playBtn.textContent = "Escribiendo...";
+          
+          setTimeout(() => {
+            escribirTodosLosTextos();
+          }, 1000);
+        } else {
+          playBtn.textContent = "Detener";
+        }
+      } else {
+        tocando = false;
+        brazo.classList.remove("brazo-entrando");
+        brazo.classList.add("brazo-saliendo");
+        vinilo.classList.remove("vinilo-animado");
+        
+        if (quienes.textContent !== "") {
+          playBtn.textContent = "Reproducir";
+        } else {
+          playBtn.textContent = "Descúbrenos";
+        }
+      }
+    });
+  });
+</script>

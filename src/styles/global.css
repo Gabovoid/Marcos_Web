@@ -1,4 +1,5 @@
 @import "tailwindcss";
+
 .scrollbar-hide {
   -ms-overflow-style: none; 
   scrollbar-width: none; 
@@ -6,3 +7,52 @@
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
 }
+
+.brazo-inicial {
+  transform: rotate(30deg);
+  transform-origin: 380px 40px;
+}
+
+@keyframes brazo-entrar {
+  from {
+    transform: rotate(30deg);
+  }
+  to {
+    transform: rotate(5deg);
+  }
+}
+
+@keyframes brazo-salir {
+  from {
+    transform: rotate(5deg);
+  }
+  to {
+    transform: rotate(30deg);
+  }
+}
+
+@keyframes girar-disco {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.vinilo-animado {
+  animation: girar-disco 4s linear infinite;
+}
+
+.delay-rotacion {
+  animation-delay: 1s;
+}
+
+.brazo-entrando {
+  animation: brazo-entrar 1.5s ease forwards;
+}
+
+.brazo-saliendo {
+  animation: brazo-salir 1.5s ease forwards;
+}
+
