@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { supabase } from '../../lib/supabase'; // ✅ IMPORTAR SUPABASE
 
 // Iconos SVG en lugar de lucide-react
 const UserIcon = () => (
@@ -40,6 +41,17 @@ export default function AuthButton() {
   useEffect(() => {
     checkSession();
 
+    // ✅ NUEVO: Escuchar cambios de autenticación
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+      if (event === 'SIGNED_OUT') {
+        setUser(null);
+      } else if (event === 'SIGNED_IN' && session?.user) {
+        setUser({
+          id: session.user.id,
+          email: session.user.email || ''
+        });
+      }
+    });
 
     function handleClickOutside(event: MouseEvent) {
       if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
@@ -48,7 +60,11 @@ export default function AuthButton() {
     }
 
     document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    
+    return () => {
+      subscription.unsubscribe();
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
   }, []);
 
   async function checkSession() {
@@ -68,9 +84,17 @@ export default function AuthButton() {
 
   async function handleLogout() {
     try {
+      // 1. Llamar al endpoint del servidor para limpiar cookies
       await fetch('/api/auth/logout', { method: 'POST' });
+      
+      // 2. ✅ CRÍTICO: Limpiar sesión del cliente de Supabase
+      await supabase.auth.signOut();
+      
+      // 3. Limpiar estado local
       setUser(null);
       setIsOpen(false);
+      
+      // 4. Redirigir
       window.location.href = '/';
     } catch (error) {
       console.error('Error logging out:', error);

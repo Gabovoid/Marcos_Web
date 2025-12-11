@@ -7,24 +7,34 @@ export default function CartWidget() {
   const cart = useStore(cartItems);
   const [isOpen, setIsOpen] = useState(false);
   const [user, setUser] = useState<any>(null);
-  const [isMounted, setIsMounted] = useState(false); // ✅ Nuevo estado
+  const [isMounted, setIsMounted] = useState(false);
 
   const total = getCartTotal();
   const count = getCartCount();
 
-  // ✅ Marcar como montado en el cliente
   useEffect(() => {
     setIsMounted(true);
   }, []);
 
   useEffect(() => {
     // Verificar si hay usuario autenticado
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    const checkUser = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
       setUser(session?.user ?? null);
-    });
+    };
+    
+    checkUser();
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null);
+    // ✅ Escuchar cambios de autenticación (incluyendo logout)
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+      if (event === 'SIGNED_OUT') {
+        // Limpiar estado cuando se cierra sesión
+        setUser(null);
+      } else if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
+        setUser(session?.user ?? null);
+      } else {
+        setUser(session?.user ?? null);
+      }
     });
 
     return () => subscription.unsubscribe();
@@ -47,7 +57,6 @@ export default function CartWidget() {
           <circle cx="19" cy="21" r="1" />
           <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12" />
         </svg>
-        {/* ✅ Solo mostrar el badge después de montar en el cliente */}
         {isMounted && count > 0 && (
           <span className="absolute -top-1 -right-1 bg-red-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-semibold">
             {count}
