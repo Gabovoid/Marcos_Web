@@ -1,10 +1,75 @@
 ---
-import { vinilos } from "../../data/vinilos.js";
+import { supabase } from "../../lib/supabase.js";
 import RImage from "../../pages/productos/RImage.astro";
+import AddToCartButton from "../Carts/AnadirCarrito";
+
+interface VinylDB {
+  id: number;
+  title: string;
+  slug: string;
+  artist: string;
+  price: number;
+  real_price: number;
+  img: string;
+  genre: string;
+  tracklist: string;
+  type: string | null;
+  stock: number;
+}
+
+interface Vinyl {
+  id: number;
+  nombre: string;
+  slug: string;
+  artista: string;
+  precio: string;
+  imagen: string;
+  genero: string;
+  tracklist: string[];
+  type: string | null;
+  stock: number;
+  precio_real: number;
+  precioNumerico: number;
+}
+
+const { data: vinyls, error } = await supabase
+  .from("vinyls")
+  .select("*")
+  .order("id", { ascending: true });
+if (error) {
+  console.error("Error al cargar vinyls:", error);
+}
+
+const vinylsFormateados: Vinyl[] =
+  (vinyls as VinylDB[])?.map((v: VinylDB) => ({
+    id: v.id,
+    nombre: v.title,
+    slug: v.slug,
+    artista: v.artist,
+    precio: `S/ ${v.price.toFixed(2)}`,
+    precioNumerico: v.price,
+    imagen: v.img,
+    genero: v.genre,
+    tracklist: JSON.parse(v.tracklist),
+    type: v.type,
+    stock: v.stock,
+    precio_real: v.real_price,
+  })) || [];
+
+// Extraer géneros únicos
+const generosUnicos = [
+  ...new Set(
+    vinylsFormateados
+      .map((v) => v.genero.split(",").map((g) => g.trim()))
+      .flat(),
+  ),
+].sort();
 ---
 
-<div class=" mt-[80px] mb-[50px] max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 py-8">
-  <h1 class="text-2xl sm:text-3xl text-white font-bold mb-6 text-center sm:text-left">
+<div class="mt-[80px] mb-[50px] max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 py-8">
+  <h1
+    class="text-2xl sm:text-3xl text-white font-bold mb-6 text-center sm:text-left"
+  >
     CATÁLOGO DE PRODUCTOS:
   </h1>
 
@@ -12,24 +77,118 @@ import RImage from "../../pages/productos/RImage.astro";
     <!-- filtros -->
     <aside class="w-full lg:w-64 bg-[#1A1A1A] p-4 rounded-lg shadow">
       <h2 class="text-lg text-white font-bold mb-4">Filtros</h2>
-      <button class="mb-4 px-3 py-1 bg-gray-700 text-white rounded hover:bg-gray-600 w-full">
+      <button
+        id="limpiarFiltros"
+        class="mb-4 px-3 py-1 bg-gray-700 text-white rounded hover:bg-gray-600 w-full"
+      >
         Limpiar
       </button>
-      <!-- generos -->
-      <div class="border-t border-gray-700 pt-4">
-        <button class="flex justify-between items-center w-full text-white font-semibold">
-          <span>Géneros</span>
-          <span>+</span>
-        </button>
 
-        <ul class="mt-2 pl-4 text-white space-y-2">
-          <li class="cursor-pointer hover:text-gray-300">Rock</li>
-          <li class="cursor-pointer hover:text-gray-300">Pop</li>
-          <li class="cursor-pointer hover:text-gray-300">Soundtrack</li>
-          <li class="cursor-pointer hover:text-gray-300">Rap</li>
+      <!-- Filtro por rango de precio -->
+      <div class="border-t border-gray-700 pt-4 mb-4">
+        <button
+          id="togglePrecio"
+          class="flex justify-between items-center w-full text-white font-semibold mb-2"
+        >
+          <span>Precio</span>
+          <span class="toggle-icon">+</span>
+        </button>
+        <div id="filtroPrecio" class="mt-2 hidden">
+          <div class="flex gap-2 items-center">
+            <input
+              type="number"
+              id="precioMin"
+              placeholder="Min"
+              class="w-full px-2 py-1 bg-gray-700 text-white rounded text-sm"
+            />
+            <span class="text-white">-</span>
+            <input
+              type="number"
+              id="precioMax"
+              placeholder="Max"
+              class="w-full px-2 py-1 bg-gray-700 text-white rounded text-sm"
+            />
+          </div>
+          <button
+            id="aplicarPrecio"
+            class="mt-2 w-full px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 text-sm"
+          >
+            Aplicar
+          </button>
+        </div>
+      </div>
+
+      <!-- Filtro por tipo -->
+      <div class="border-t border-gray-700 pt-4 mb-4">
+        <button
+          id="toggleTipo"
+          class="flex justify-between items-center w-full text-white font-semibold mb-2"
+        >
+          <span>Categorías</span>
+          <span class="toggle-icon">+</span>
+        </button>
+        <ul id="listaTipo" class="mt-2 pl-4 text-white space-y-2 hidden">
+          <li>
+            <label
+              class="flex items-center gap-2 cursor-pointer hover:text-gray-300"
+            >
+              <input type="checkbox" value="nuevos" class="filtro-tipo" />
+              <span>Nuevos</span>
+            </label>
+          </li>
+          <li>
+            <label
+              class="flex items-center gap-2 cursor-pointer hover:text-gray-300"
+            >
+              <input type="checkbox" value="destacados" class="filtro-tipo" />
+              <span>Destacados</span>
+            </label>
+          </li>
+          <li>
+            <label
+              class="flex items-center gap-2 cursor-pointer hover:text-gray-300"
+            >
+              <input type="checkbox" value="ofertas" class="filtro-tipo" />
+              <span>Ofertas</span>
+            </label>
+          </li>
+          <li>
+            <label
+              class="flex items-center gap-2 cursor-pointer hover:text-gray-300"
+            >
+              <input
+                type="checkbox"
+                value="ofertas navideñas"
+                class="filtro-tipo"
+              />
+              <span>Ofertas Navideñas</span>
+            </label>
+          </li>
         </ul>
       </div>
 
+      <!-- Filtro por género -->
+      <div class="border-t border-gray-700 pt-4">
+        <button
+          id="toggleGenero"
+          class="flex justify-between items-center w-full text-white font-semibold mb-2"
+        >
+          <span>Géneros</span>
+          <span class="toggle-icon">+</span>
+        </button>
+        <ul id="listaGeneros" class="mt-2 pl-4 text-white space-y-2 hidden">
+          {
+            generosUnicos.map((genero) => (
+              <li>
+                <label class="flex items-center gap-2 cursor-pointer hover:text-gray-300">
+                  <input type="checkbox" value={genero} class="filtro-genero" />
+                  <span class="text-sm">{genero}</span>
+                </label>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
     </aside>
 
     <!-- catalogo -->
@@ -38,7 +197,10 @@ import RImage from "../../pages/productos/RImage.astro";
       <div class="flex justify-center sm:justify-end mb-6">
         <div class="flex items-center gap-2">
           <label class="text-white text-sm sm:text-base">Ordenar por:</label>
-          <select id="ordenarPor" class="px-2 text-white bg-gray-700 py-1 rounded text-sm sm:text-base">
+          <select
+            id="ordenarPor"
+            class="px-2 text-white bg-gray-700 py-1 rounded text-sm sm:text-base"
+          >
             <option value="predeterminado">Predeterminado</option>
             <option value="nombre">Nombre</option>
             <option value="precioAsc">Precio (menor a mayor)</option>
@@ -47,35 +209,231 @@ import RImage from "../../pages/productos/RImage.astro";
         </div>
       </div>
 
+      <!-- contador de resultados -->
+      <p id="contadorResultados" class="text-white text-sm mb-4"></p>
+
       <!-- productos -->
-      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6 sm:gap-8">
-        {vinilos.map((v) => (
-          <div class="block text-center transition transform hover:scale-105">
-            <a href={`/productos/${v.slug}`} class="block" aria-label={v.nombre}>
-              <div class="relative aspect-square w-full overflow-hidden bg-black rounded-lg shadow">
-                <picture>
-                  <RImage
-                    src={v.imagen || "/placeholder.webp"}
-                    alt={v.nombre}
-                    class="w-full h-full object-cover"
-                    width={400}
-                    height={400}
-                    format="webp"/>
-                </picture>
-              </div>
-              <div class="mt-2">
-                <h3 class="text-sm sm:text-base text-white font-bold truncate">{v.nombre}</h3>
-                <p class="text-xs sm:text-sm text-white">{v.artista}</p>
-                <p class="text-sm sm:text-base text-white font-semibold mt-1">{v.precio}</p>
-              </div>
-            </a>
-            <button class="mt-3 w-full flex items-center justify-center gap-2 bg-white hover:bg-[#4d5645] text-black hover:text-white font-semibold py-2 rounded-lg transition cursor-pointer text-sm sm:text-base">
-              Agregar
-              <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 stroke-[2]" fill="none" viewBox="0 0 24 24" stroke="currentColor"> <circle cx="8" cy="21" r="1"/> <circle cx="19" cy="21" r="1"/> <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/> </svg>
-            </button>
-          </div>
-        ))}
+      <div
+        id="gridProductos"
+        class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6 sm:gap-8"
+      >
+        {
+          vinylsFormateados.map((v) => (
+            <div
+              class="producto-item block text-center transition transform hover:scale-105"
+              data-id={v.id}
+              data-nombre={v.nombre.toLowerCase()}
+              data-artista={v.artista.toLowerCase()}
+              data-genero={v.genero.toLowerCase()}
+              data-precio={v.precioNumerico}
+              data-type={v.type || ""}
+            >
+              <a
+                href={`/productos/${v.slug}`}
+                class="block"
+                aria-label={v.nombre}
+              >
+                <div class="relative aspect-square w-full overflow-hidden bg-black rounded-lg shadow">
+                  <picture>
+                    <RImage
+                      src={v.imagen || "/placeholder.webp"}
+                      alt={v.nombre}
+                      class="w-full h-full object-cover"
+                      width={400}
+                      height={400}
+                    />
+                  </picture>
+                </div>
+                <div class="mt-2">
+                  <h3 class="text-sm sm:text-base text-white font-bold truncate">
+                    {v.nombre}
+                  </h3>
+                  <p class="text-xs sm:text-sm text-white truncate">
+                    {v.artista}
+                  </p>
+                  <p class="text-sm sm:text-base text-white font-semibold mt-1">
+                    {v.precio}
+                  </p>
+                </div>
+              </a>
+              <AddToCartButton
+                client:load
+                vinyl={{
+                  id: v.id,
+                  title: v.nombre,
+                  artist: v.artista,
+                  price: v.precioNumerico,
+                  img: v.imagen,
+                  slug: v.slug,
+                  stock: v.stock,
+                }}
+              />
+            </div>
+          ))
+        }
       </div>
+
+      <!-- mensaje sin resultados -->
+      <p id="sinResultados" class="text-white text-center hidden mt-8">
+        No se encontraron productos con los filtros seleccionados
+      </p>
     </section>
   </div>
 </div>
+
+--- // ... todo tu código anterior igual hasta el script
+
+<script>
+  const productos = document.querySelectorAll(".producto-item");
+  const ordenarSelect = document.getElementById(
+    "ordenarPor",
+  ) as HTMLSelectElement;
+  const limpiarBtn = document.getElementById("limpiarFiltros");
+  const contadorResultados = document.getElementById("contadorResultados");
+  const sinResultados = document.getElementById("sinResultados");
+  const gridProductos = document.getElementById("gridProductos");
+
+  // Toggle de acordeones
+  const toggles = [
+    { btn: "togglePrecio", list: "filtroPrecio" },
+    { btn: "toggleTipo", list: "listaTipo" },
+    { btn: "toggleGenero", list: "listaGeneros" },
+  ];
+
+  toggles.forEach(({ btn, list }) => {
+    const btnEl = document.getElementById(btn);
+    const listEl = document.getElementById(list);
+    btnEl?.addEventListener("click", () => {
+      listEl?.classList.toggle("hidden");
+      const icon = btnEl.querySelector(".toggle-icon");
+      if (icon)
+        icon.textContent = listEl?.classList.contains("hidden") ? "+" : "-";
+    });
+  });
+
+  // Función para scroll al inicio del catálogo
+  function scrollACatalogo() {
+    const catalogo = document.querySelector("h1");
+    if (catalogo) {
+      catalogo.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }
+
+  // Función para aplicar filtros
+  function aplicarFiltros() {
+    const tiposSeleccionados = Array.from(
+      document.querySelectorAll(".filtro-tipo:checked"),
+    ).map((el) => (el as HTMLInputElement).value);
+
+    const generosSeleccionados = Array.from(
+      document.querySelectorAll(".filtro-genero:checked"),
+    ).map((el) => (el as HTMLInputElement).value.toLowerCase());
+
+    const precioMin = parseFloat(
+      (document.getElementById("precioMin") as HTMLInputElement)?.value || "0",
+    );
+    const precioMax = parseFloat(
+      (document.getElementById("precioMax") as HTMLInputElement)?.value ||
+        "Infinity",
+    );
+
+    let visibles = 0;
+
+    productos.forEach((producto) => {
+      const el = producto as HTMLElement;
+      const tipo = el.dataset.type || "";
+      const genero = el.dataset.genero || "";
+      const precio = parseFloat(el.dataset.precio || "0");
+
+      const cumpleTipo =
+        tiposSeleccionados.length === 0 || tiposSeleccionados.includes(tipo);
+      const cumpleGenero =
+        generosSeleccionados.length === 0 ||
+        generosSeleccionados.some((g) => genero.includes(g));
+      const cumplePrecio = precio >= precioMin && precio <= precioMax;
+
+      if (cumpleTipo && cumpleGenero && cumplePrecio) {
+        el.style.display = "block";
+        visibles++;
+      } else {
+        el.style.display = "none";
+      }
+    });
+
+    if (contadorResultados) {
+      contadorResultados.textContent = `Mostrando ${visibles} de ${productos.length} productos`;
+    }
+
+    if (sinResultados && gridProductos) {
+      if (visibles === 0) {
+        sinResultados.classList.remove("hidden");
+        gridProductos.classList.add("hidden");
+      } else {
+        sinResultados.classList.add("hidden");
+        gridProductos.classList.remove("hidden");
+      }
+    }
+
+    scrollACatalogo();
+  }
+
+  function ordenarProductos() {
+    const orden = ordenarSelect?.value;
+    const productosArray = Array.from(productos) as HTMLElement[];
+
+    productosArray.sort((a, b) => {
+      switch (orden) {
+        case "nombre":
+          return (a.dataset.nombre || "").localeCompare(b.dataset.nombre || "");
+        case "precioAsc":
+          return (
+            parseFloat(a.dataset.precio || "0") -
+            parseFloat(b.dataset.precio || "0")
+          );
+        case "precioDesc":
+          return (
+            parseFloat(b.dataset.precio || "0") -
+            parseFloat(a.dataset.precio || "0")
+          );
+        case "predeterminado":
+        default:
+          return parseInt(a.dataset.id || "0") - parseInt(b.dataset.id || "0");
+      }
+    });
+
+    productosArray.forEach((producto) => {
+      gridProductos?.appendChild(producto);
+    });
+
+    scrollACatalogo();
+  }
+
+  document
+    .querySelectorAll(".filtro-tipo, .filtro-genero")
+    .forEach((checkbox) => {
+      checkbox.addEventListener("change", aplicarFiltros);
+    });
+
+  document
+    .getElementById("aplicarPrecio")
+    ?.addEventListener("click", aplicarFiltros);
+
+  ordenarSelect?.addEventListener("change", ordenarProductos);
+
+  limpiarBtn?.addEventListener("click", () => {
+    document
+      .querySelectorAll(".filtro-tipo, .filtro-genero")
+      .forEach((checkbox) => {
+        (checkbox as HTMLInputElement).checked = false;
+      });
+    (document.getElementById("precioMin") as HTMLInputElement).value = "";
+    (document.getElementById("precioMax") as HTMLInputElement).value = "";
+    if (ordenarSelect) ordenarSelect.value = "predeterminado";
+    aplicarFiltros();
+    ordenarProductos();
+  });
+
+  ordenarProductos();
+
+  aplicarFiltros();
+</script>

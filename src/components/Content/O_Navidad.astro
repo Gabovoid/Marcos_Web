@@ -1,0 +1,133 @@
+---
+import { supabase } from "../../lib/supabase";
+import AddToCartButton from "../Carts/AnadirCarrito";
+
+// Obtener solo los productos en oferta navideña
+const { data: vinyls, error } = await supabase
+  .from("vinyls")
+  .select("*")
+  .eq("type", "ofertas navideñas")
+  .order("id", { ascending: true });
+
+if (error) {
+  console.error("Error al cargar ofertas navideñas:", error);
+}
+
+const products = vinyls?.map((v) => {
+  const descuento = Math.round(((v.real_price - v.price) / v.real_price) * 100);
+  return {
+    id: v.id,
+    title: v.title,
+    artist: v.artist,
+    price: `S/ ${v.price.toFixed(2)}`,
+    priceNumeric: v.price,
+    realPrice: `S/ ${v.real_price.toFixed(2)}`,
+    image: v.img,
+    slug: v.slug,
+    descuento: descuento,
+    stock: v.stock
+  };
+}) || [];
+---
+
+<section class="bg-[#1A1A1A] text-white py-25 relative">
+  <h2 class="text-center text-2xl font-bold font-sans mb-6">OFERTAS NAVIDEÑAS</h2>
+
+  {products.length > 0 ? (
+    <>
+      <!-- Botones solo visibles en desktop -->
+      <div class="hidden lg:block lg:absolute left-0 -translate-y-1 z-10">
+        <button id="btn-leftON" class="bg-[#161616] py-42 px-27 text-xl hover:bg-white hover:text-black transition disabled:opacity-40 cursor-pointer">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="m12 19-7-7 7-7"/>
+            <path d="M19 12H5"/>
+          </svg>
+        </button>
+      </div>
+
+      <div class="hidden lg:block lg:absolute right-0 -translate-y-1 z-10">
+        <button id="btn-rightON" class="bg-[#161616] py-42 px-27 text-xl hover:bg-white hover:text-black transition disabled:opacity-40 cursor-pointer">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M5 12h14"/>
+            <path d="m12 5 7 7-7 7"/>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Contenedor del slider -->
+      <div class="overflow-x-auto lg:overflow-hidden max-w-5xl mx-auto mt-6 scrollbar-hide">
+        <div id="sliderON" class="flex transition-transform duration-500 ease-in-out">
+          {products.map((product) => (
+            <div class="relative w-1/2 lg:w-1/3 flex-shrink-0 px-3 text-center">
+              <a href={`/productos/${product.slug}`}>
+                <div class="relative aspect-square hover:scale-105 w-full overflow-hidden bg-black rounded-lg shadow">
+                  <img 
+                    src={product.image} 
+                    alt={product.title} 
+                    class="w-full h-full object-cover"
+                    loading="lazy"
+                  />
+                  <p class="absolute top-2 right-2 bg-green-600 text-white text-xs font-bold px-2 py-1 rounded-md">
+                    -{product.descuento}%
+                  </p>
+                </div>
+                <p class="mt-2 text-sm text-center truncate w-full">{product.title}</p>
+                <div class="flex items-center justify-center gap-2">
+                  <p class="font-semibold text-sm">{product.price}</p>
+                  <p class="font-light text-sm line-through text-gray-400">{product.realPrice}</p>
+                </div>
+              </a>
+
+              <AddToCartButton 
+                client:load
+                vinyl={{
+                  id: product.id,
+                  title: product.title,
+                  artist: product.artist,
+                  price: product.priceNumeric,
+                  img: product.image,
+                  slug: product.slug,
+                  stock: product.stock
+                }}
+              />
+            </div>
+          ))}
+        </div>
+      </div>
+    </>
+  ) : (
+    <p class="text-center text-gray-400">No hay ofertas navideñas disponibles</p>
+  )}
+</section>
+
+<div class="w-full h-[1px] bg-gradient-to-r from-transparent via-gray-400 to-transparent"></div>
+
+<script is:inline>
+const sliderON = document.getElementById("sliderON");
+const btnLeftON = document.getElementById("btn-leftON");
+const btnRightON = document.getElementById("btn-rightON");
+
+if (sliderON && btnLeftON && btnRightON) {
+  let page = 0;
+  const cardsVisible = 3;
+  const totalCards = sliderON.children.length;
+  const totalPages = Math.ceil(totalCards / cardsVisible);
+
+  function updateSliderON() {
+    const cardWidth = sliderON.children[0].offsetWidth;
+    sliderON.style.transform = `translateX(-${page * cardWidth * cardsVisible}px)`;
+    btnLeftON.disabled = page === 0;
+    btnRightON.disabled = page === totalPages - 1;
+  }
+
+  btnLeftON.addEventListener("click", () => {
+    if (page > 0) { page--; updateSliderON(); }
+  });
+
+  btnRightON.addEventListener("click", () => {
+    if (page < totalPages - 1) { page++; updateSliderON(); }
+  });
+
+  updateSliderON();
+}
+</script>

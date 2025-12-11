@@ -1,79 +1,104 @@
 ---
-import { Image } from "astro:assets";
-import data from "../../assets/Data.webp";
-import felicilandia from "../../assets/Felicilandia.webp";
-import nectar from "../../assets/Nectar.webp";
-import bocanada from "../../assets/Bocanada.webp";
-import liveforever from "../../assets/LiveForever.webp";
-import papota from "../../assets/Papota.webp";
+import { supabase } from "../../lib/supabase";
+import AddToCartButton from "../Carts/AnadirCarrito";
 
-const products = [
-  { id: 1, title: "DATA Limited Edition (Alternate Cover)", realprice: "S/ 118.00", price: "S/ 98.00", image: data, slug:"data" },
-  { id: 2, title: "Nectar (Colored Vinyl) Vinyl 2LP", realprice: "S/ 195.00", price: "S/ 173.00", image: nectar, slug:"nectar" },
-  { id: 3, title: "Felicilandia 2LP Vinyl", realprice: "S/ 130.00", price: "S/ 108.00", image: felicilandia, slug:"felicilandia" },
-  { id: 4, title: "Bocanada [2LP]", realprice: "S/ 219.00", price: "S/ 174.00", image: bocanada, slug:"bocanada" },
-  { id: 5, title: "Live forever (LP-Vinilo)", realprice: "S/ 106.00", price: "S/ 88.00", image: liveforever, slug:"live-forever" },
-  { id: 6, title: "Papota (Vinilo de color baby pink)", realprice: "S/ 179.00", price: "S/ 152.00", image: papota, slug:"papota" },
-];
+// Obtener solo los productos en oferta
+const { data: vinyls, error } = await supabase
+  .from("vinyls")
+  .select("*")
+  .eq("type", "ofertas")
+  .order("id", { ascending: true });
+
+if (error) {
+  console.error("Error al cargar ofertas:", error);
+}
+
+// Transformar datos y calcular descuento
+const products = vinyls?.map((v) => {
+  const descuento = Math.round(((v.real_price - v.price) / v.real_price) * 100);
+  return {
+    id: v.id,
+    title: v.title,
+    artist: v.artist,
+    price: `S/ ${v.price.toFixed(2)}`,
+    priceNumeric: v.price,
+    realPrice: `S/ ${v.real_price.toFixed(2)}`,
+    image: v.img,
+    slug: v.slug,
+    descuento: descuento,
+    stock: v.stock
+  };
+}) || [];
 ---
 
 <section class="bg-[#1A1A1A] text-white py-25 relative">
   <h2 class="text-center text-2xl font-bold font-sans mb-6">OFERTAS IMPERDIBLES</h2>
 
-  <!-- Botones solo visibles en desktop -->
-  <div class="hidden lg:block lg:absolute left-0 -translate-y-1 z-10">
-    <button id="btn-leftO" class="bg-[#161616] py-42 px-27 text-xl hover:bg-white hover:text-black transition disabled:opacity-40 cursor-pointer">
-      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="m12 19-7-7 7-7"/>
-        <path d="M19 12H5"/>
-      </svg>
-    </button>
-  </div>
+  {products.length > 0 ? (
+    <>
+      <!-- Botones solo visibles en desktop -->
+      <div class="hidden lg:block lg:absolute left-0 -translate-y-1 z-10">
+        <button id="btn-leftO" class="bg-[#161616] py-42 px-27 text-xl hover:bg-white hover:text-black transition disabled:opacity-40 cursor-pointer">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="m12 19-7-7 7-7"/>
+            <path d="M19 12H5"/>
+          </svg>
+        </button>
+      </div>
 
-  <div class="hidden lg:block lg:absolute right-0 -translate-y-1 z-10">
-    <button id="btn-rightO" class="bg-[#161616] py-42 px-27 text-xl hover:bg-white hover:text-black transition disabled:opacity-40 cursor-pointer">
-      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M5 12h14"/>
-        <path d="m12 5 7 7-7 7"/>
-      </svg>
-    </button>
-  </div>
+      <div class="hidden lg:block lg:absolute right-0 -translate-y-1 z-10">
+        <button id="btn-rightO" class="bg-[#161616] py-42 px-27 text-xl hover:bg-white hover:text-black transition disabled:opacity-40 cursor-pointer">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M5 12h14"/>
+            <path d="m12 5 7 7-7 7"/>
+          </svg>
+        </button>
+      </div>
 
-  <!-- Contenedor del slider -->
-  <div class="overflow-x-auto lg:overflow-hidden max-w-5xl mx-auto mt-6 scrollbar-hide">
-    <div id="sliderO" class="flex transition-transform duration-500 ease-in-out">
-      {products.map((product) => (
-        <div class="relative w-1/2 lg:w-1/3 flex-shrink-0 px-3 text-center">
-          <a href={`/productos/${product.slug}`}>
+      <!-- Contenedor del slider -->
+      <div class="overflow-x-auto lg:overflow-hidden max-w-5xl mx-auto mt-6 scrollbar-hide">
+        <div id="sliderO" class="flex transition-transform duration-500 ease-in-out">
+          {products.map((product) => (
+            <div class="relative w-1/2 lg:w-1/3 flex-shrink-0 px-3 text-center">
+              <a href={`/productos/${product.slug}`}>
+                <div class="relative aspect-square hover:scale-105 w-full overflow-hidden bg-black rounded-lg shadow">
+                  <img 
+                    src={product.image} 
+                    alt={product.title} 
+                    class="w-full h-full object-cover"
+                    loading="lazy"
+                  />
+                  <p class="absolute top-2 right-2 bg-red-600 text-white text-xs font-bold px-2 py-1 rounded-md">
+                    -{product.descuento}%
+                  </p>
+                </div>
+                <p class="mt-2 text-sm text-center truncate w-full">{product.title}</p>
+                <div class="flex items-center justify-center gap-2">
+                  <p class="font-semibold text-sm">{product.price}</p>
+                  <p class="font-light text-sm line-through text-gray-400">{product.realPrice}</p>
+                </div>
+              </a>
 
-            <div class="relative aspect-square hover:scale-105 w-full overflow-hidden bg-black rounded-lg shadow">
-              <Image 
-                src={product.image} 
-                alt={product.title} 
-                class="w-full h-full object-cover" 
+              <AddToCartButton 
+                client:load
+                vinyl={{
+                  id: product.id,
+                  title: product.title,
+                  artist: product.artist,
+                  price: product.priceNumeric,
+                  img: product.image,
+                  slug: product.slug,
+                  stock: product.stock
+                }}
               />
-              <p class="absolute top-2 right-2 bg-red-600 text-black text-xs font-semibold px-2 py-1 rounded-md">
-                Oferta
-              </p>
             </div>
-            <p class="mt-2 text-sm text-center truncate w-full">{product.title}</p>
-            <div class="flex items-center justify-center gap-2">
-                <p class="font-semibold text-sm">{product.price}</p>
-                <p class="font-light text-sm line-through">{product.realprice}</p>
-            </div>
-          </a>
-
-          <button class="mt-3 w-full flex items-center justify-center gap-2 bg-white hover:bg-[#4d5645] text-black hover:text-white font-semibold py-2 rounded-lg transition cursor-pointer">
-            Agregar
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 stroke-[2]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/>
-              <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/>
-            </svg>
-          </button>
+          ))}
         </div>
-      ))}
-    </div>
-  </div>
+      </div>
+    </>
+  ) : (
+    <p class="text-center text-gray-400">No hay ofertas disponibles</p>
+  )}
 </section>
 
 <div class="w-full h-[1px] bg-gradient-to-r from-transparent via-gray-400 to-transparent"></div>
@@ -83,7 +108,7 @@ const sliderO = document.getElementById("sliderO");
 const btnLeftO = document.getElementById("btn-leftO");
 const btnRightO = document.getElementById("btn-rightO");
 
-if (btnLeftO && btnRightO) {
+if (sliderO && btnLeftO && btnRightO) {
   let page = 0;
   const cardsVisible = 3;
   const totalCards = sliderO.children.length;

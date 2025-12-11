@@ -1,0 +1,146 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { supabase } from '../lib/supabase';
+
+const accessToken = Astro.cookies.get('sb-access-token')?.value;
+const refreshToken = Astro.cookies.get('sb-refresh-token')?.value;
+
+if (!accessToken || !refreshToken) {
+  return Astro.redirect('/login');
+}
+
+const { data: { user } } = await supabase.auth.setSession({
+  access_token: accessToken,
+  refresh_token: refreshToken
+});
+
+if (!user) {
+  return Astro.redirect('/login');
+}
+
+// ✅ Obtener órdenes del usuario con sus items y vinyls
+const { data: orders, error } = await supabase
+  .from('orders')
+  .select(`
+    *,
+    orders_items (
+      id,
+      quantity,
+      purchase_price,
+      vinyls (
+        id,
+        title,
+        artist,
+        img,
+        slug
+      )
+    )
+  `)
+  .eq('user_id', user.id)
+  .order('id', { ascending: false });
+
+if (error) {
+  console.error('Error al cargar órdenes:', error);
+}
+---
+
+<Layout title="Mis Compras">
+  <div class="max-w-6xl mx-auto px-4 py-8 mt-20">
+    <h1 class="text-3xl font-bold text-white mb-8">Mis Compras</h1>
+
+    {orders && orders.length > 0 ? (
+      <div class="space-y-6">
+        {orders.map((order) => (
+          <div class="bg-[#1A1A1A] rounded-lg p-6">
+            <div class="flex justify-between items-start mb-4">
+              <div>
+
+              </div>
+              <span class={`px-3 py-1 rounded text-sm font-semibold ${
+                order.status === 'completed' ? 'bg-green-600 text-white' :
+                order.status === 'pending' ? 'bg-yellow-600 text-white' :
+                order.status === 'shipped' ? 'bg-blue-600 text-white' :
+                'bg-red-600 text-white'
+              }`}>
+                {order.status === 'completed' ? 'Completado' :
+                 order.status === 'pending' ? 'Pendiente' :
+                 order.status === 'shipped' ? 'Enviado' :
+                 'Cancelado'}
+              </span>
+            </div>
+
+            <div class="border-t border-gray-700 pt-4">
+              <div class="space-y-4">
+                {order.orders_items?.map((item: any) => (
+                  <div class="flex gap-4 items-center">
+                    {/* Imagen del vinyl */}
+                    {item.vinyls?.img && (
+                      <a href={`/productos/${item.vinyls.slug}`}>
+                        <img 
+                          src={item.vinyls.img} 
+                          alt={item.vinyls.title}
+                          class="w-20 h-20 object-cover rounded hover:opacity-80 transition"
+                        />
+                      </a>
+                    )}
+                    
+                    <div class="flex-1 flex justify-between items-center">
+                      <div>
+                        <a 
+                          href={`/productos/${item.vinyls?.slug}`}
+                          class="font-semibold text-white hover:text-gray-300 transition"
+                        >
+                          {item.vinyls?.title || 'Producto eliminado'}
+                        </a>
+                        <p class="text-sm text-gray-400">
+                          {item.vinyls?.artist || ''}
+                        </p>
+                        <p class="text-sm text-gray-500 mt-1">
+                          Cantidad: {item.quantity} × S/ {parseFloat(item.purchase_price).toFixed(2)}
+                        </p>
+                      </div>
+                      <span class="font-semibold text-white">
+                        S/ {(parseFloat(item.purchase_price) * item.quantity).toFixed(2)}
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              
+              <div class="border-t border-gray-700 mt-4 pt-4 flex justify-between items-center">
+                <span class="text-white font-semibold text-lg">Total:</span>
+                <span class="text-white font-bold text-2xl">
+                  S/ {parseFloat(order.total).toFixed(2)}
+                </span>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    ) : (
+      <div class="text-center py-16">
+        <svg 
+          class="w-24 h-24 mx-auto text-gray-600 mb-4"
+          fill="none" 
+          stroke="currentColor" 
+          viewBox="0 0 24 24"
+        >
+          <path 
+            stroke-linecap="round" 
+            stroke-linejoin="round" 
+            stroke-width="2" 
+            d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
+          />
+        </svg>
+        <h2 class="text-2xl font-bold text-white mb-2">No tienes compras aún</h2>
+        <p class="text-gray-400 mb-6">Explora nuestro catálogo y encuentra tus vinilos favoritos</p>
+        <a 
+          href="/productos" 
+          class="inline-block px-6 py-3 bg-white text-black hover:bg-gray-200 rounded-lg transition font-semibold"
+        >
+          Ver Productos
+        </a>
+      </div>
+    )}
+  </div>
+</Layout>

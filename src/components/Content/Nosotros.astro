@@ -12,12 +12,12 @@ import aboutText from "../../data/about.js";
     
   </div>
 
-  <div class="w-100% h-100hvp flex flex-row">
-    <div class="relative ml-10 mt-2 w-[800px] h-1/2">
+  <div class="w-100% h-100hvp flex flex-col lg:flex-row">
+    <div class="relative ml-2 mt-4 w-full h-auto lg:ml-10 lg:mt-2 lg:w-[800px] lg:h-1/2">
       <div class="w-[380px] flex justify-end items-end relative z-10">
         <button
           id="playBtn"
-          class="border-2 px-4 py-2 rounded-full transition transform hover:scale-105 cursor-pointer relative z-10 w-[130px] text-center">
+          class="border-2 px-4 py-2 rounded-full transition transform hover:scale-105 cursor-pointer relative z-10 w-[130px] text-center sm:w-[150px] md:w-[160px] lg:w-[130px]">
           Descúbrenos
         </button>
       </div>
@@ -27,7 +27,7 @@ import aboutText from "../../data/about.js";
         id="vinilo"
         src={Vinilo}
         alt="Cargado..."
-        class="w-[650px] h-[700px] object-cover filter brightness-75 grayscale"
+        class="w-[650px] h-[700px] object-cover filter brightness-75 grayscale hidden lg:block"
       />
 
       <!-- Palo -->
@@ -39,7 +39,7 @@ import aboutText from "../../data/about.js";
           id="brazo"
           src={Palo}
           alt="Cargado..."
-          class="w-full h-full filter brightness-75 grayscale brazo-inicial"
+          class="w-full h-full filter brightness-75 grayscale brazo-inicial hidden lg:block"
         />
       </div>
     </div>

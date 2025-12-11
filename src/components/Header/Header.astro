@@ -1,6 +1,8 @@
 ---
 import { Image } from "astro:assets";
 import logo from "../../assets/Logo.png";
+import CartWidget from "../Carts/PanelCart";
+import AuthButton from "../Auth/AuthButton";
 ---
 
 <header class="bg-black text-white flex items-center justify-between border-b border-white px-4 sm:px-8 py-5 fixed top-0 left-0 right-0 z-50">
@@ -26,35 +28,27 @@ import logo from "../../assets/Logo.png";
 
   <!--botones-->
   <div class="flex items-center space-x-2 sm:space-x-1 md:space-x-4">
-    <!-- Buscador -->
-    <div class="hidden lg:flex items-center border-b border-white w-40 sm:w-56 space-x-2">
+    <!-- Buscador Desktop -->
+    <form id="search-form-desktop" action="/busqueda" method="get" class="hidden lg:flex items-center border-b border-white w-40 sm:w-56 space-x-2">
       <input
         type="text"
+        name="q"
+        id="search-input-desktop"
         placeholder="Buscar..."
         class="bg-transparent text-white placeholder-gray-400 focus:outline-none w-full px-2"/>
-      <button class="rounded-full p-3 sm:p-2 cursor-pointer hover:bg-white hover:text-black transition">
+      <button type="submit" class="rounded-full p-3 sm:p-2 cursor-pointer hover:bg-white hover:text-black transition">
         <!--lupa -->
         <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 stroke-[2]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/>
         </svg>
       </button>
-    </div>
+    </form>
 
-    <!-- Uuario -->
-    <button class="rounded-full p-3 sm:p-2 cursor-pointer hover:bg-white hover:text-black transition">
-      <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 stroke-[2]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
-        <circle cx="12" cy="7" r="4"/>
-      </svg>
-    </button>
+    <!-- Usuario -->
+    <AuthButton client:load />
 
     <!-- carrito -->
-    <button class="rounded-full p-3 sm:p-2 cursor-pointer hover:bg-white hover:text-black transition">
-      <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 stroke-[2]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/>
-        <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/>
-      </svg>
-    </button>
+    <CartWidget client:load />
 
     <!-- Botón hamburguesa -->
     <button id="menu-toggle" class="lg:hidden text-2xl focus:outline-none rounded-full p-3 sm:p-2 cursor-pointer hover:bg-white hover:text-black transition">
@@ -77,14 +71,17 @@ import logo from "../../assets/Logo.png";
     <a href="/contact" class="text-white hover:text-gray-400">CONTÁCTANOS</a>
   </div>
 
-  <div class="h-0.5 bg-white  -mx-8"></div>
-  <!-- Buscador -->
-  <div class="flex items-center border-b border-white w-full">
+  <div class="h-0.5 bg-white -mx-8"></div>
+  
+  <!-- Buscador Mobile -->
+  <form id="search-form-mobile" action="/busqueda" method="get" class="flex items-center border-b border-white w-full">
     <input
       type="text"
+      name="q"
+      id="search-input-mobile"
       placeholder="Buscar..."
       class="bg-transparent text-white placeholder-gray-400 focus:outline-none w-full px-2"/>
-    <button class="border-white rounded-full py-5 cursor-pointer hover:bg-white hover:text-black transition">
+    <button type="submit" class="border-white rounded-full py-5 cursor-pointer hover:bg-white hover:text-black transition">
       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" 
            viewBox="0 0 24 24" fill="none" stroke="currentColor" 
            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -92,17 +89,38 @@ import logo from "../../assets/Logo.png";
         <circle cx="11" cy="11" r="8"></circle>
       </svg>
     </button>
-  </div>
+  </form>
 </nav>
 
-<script is:inline>
+<script>
   document.addEventListener("DOMContentLoaded", () => {
     const toggleBtn = document.getElementById("menu-toggle");
     const submenu = document.getElementById("submenu");
 
-    toggleBtn.addEventListener("click", () => {
-      submenu.classList.toggle("hidden");
-      submenu.classList.toggle("flex");
+    // Toggle del menú móvil
+    toggleBtn?.addEventListener("click", () => {
+      submenu?.classList.toggle("hidden");
+      submenu?.classList.toggle("flex");
+    });
+
+    // Manejo del formulario de búsqueda desktop
+    const searchFormDesktop = document.getElementById("search-form-desktop");
+    searchFormDesktop?.addEventListener("submit", (e) => {
+      const input = document.getElementById("search-input-desktop") as HTMLInputElement;
+      if (!input.value.trim()) {
+        e.preventDefault();
+        alert("Por favor ingresa un término de búsqueda");
+      }
+    });
+
+    // Manejo del formulario de búsqueda mobile
+    const searchFormMobile = document.getElementById("search-form-mobile");
+    searchFormMobile?.addEventListener("submit", (e) => {
+      const input = document.getElementById("search-input-mobile") as HTMLInputElement;
+      if (!input.value.trim()) {
+        e.preventDefault();
+        alert("Por favor ingresa un término de búsqueda");
+      }
     });
   });
 </script>

@@ -1,47 +1,172 @@
 ---
 import Layout from "../../layouts/Layout.astro";
-import { vinilos } from "../../data/vinilos.js";
+import { supabase } from "../../lib/supabase.js";
 import RImage from "../../pages/productos/RImage.astro";
 
-export async function getStaticPaths() {
-  return vinilos.map((v) => ({
-    params: { slug: v.slug },
-    props: { vinilo: v },
-  }));
+// Volver a prerender para mejor performance
+export const prerender = true;
+
+interface Vinilo {
+  id: number;
+  nombre: string;
+  slug: string;
+  artista: string;
+  precio: string;
+  precioNumerico: number;
+  precio_real: number;
+  imagen: string;
+  genero: string;
+  tracklist: string[];
+  type: string | null;
+  stock: number;
 }
-const { vinilo } = Astro.props;
+
+export async function getStaticPaths() {
+  const { data: vinyls } = await supabase
+    .from('vinyls')
+    .select('*');
+
+  return vinyls?.map((v) => ({
+    params: { slug: v.slug },
+    props: { 
+      vinilo: {
+        id: v.id,
+        nombre: v.title,
+        slug: v.slug,
+        artista: v.artist,
+        precio: `S/ ${v.price.toFixed(2)}`,
+        precioNumerico: v.price,
+        precio_real: v.real_price,
+        imagen: v.img,
+        genero: v.genre,
+        tracklist: JSON.parse(v.tracklist),
+        type: v.type,
+        stock: v.stock
+      } as Vinilo
+    },
+  })) || [];
+}
+
+const { vinilo }: { vinilo: Vinilo } = Astro.props;
+
+const esOferta = vinilo.precio_real > vinilo.precioNumerico;
+const descuento = esOferta 
+  ? Math.round(((vinilo.precio_real - vinilo.precioNumerico) / vinilo.precio_real) * 100)
+  : 0;
+
+const esOfertaNavidena = vinilo.type === "ofertas navideñas";
+const colorBadge = esOfertaNavidena ? "bg-green-600" : "bg-red-600";
 ---
+
 <Layout title={vinilo.nombre}>
   <section class="max-w-4xl mt-[80px] mx-auto px-4 py-10">
     <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
-      <div class="w-full aspect-square overflow-hidden rounded-lg shadow">
+      <div class="w-full aspect-square overflow-hidden rounded-lg shadow relative">
         <picture>
-            <RImage 
-              src={vinilo.imagen || "/placeholder.webp"}
-              alt={vinilo.nombre}
-              class="w-full h-full object-cover"
-              width={500}
-              height={500}
-              format="webp"/>
-          </picture>
+          <RImage 
+            src={vinilo.imagen || "/placeholder.webp"}
+            alt={vinilo.nombre}
+            class="w-full h-full object-cover"
+            width={500}
+            height={500}
+          />
+        </picture>
+        {esOferta && (
+          <div class={`absolute top-4 right-4 ${colorBadge} text-white text-sm font-bold px-3 py-2 rounded-md shadow-lg`}>
+            -{descuento}% OFF
+          </div>
+        )}
       </div>
+
       <div>
         <h1 class="text-white text-2xl py-3 font-bold">{vinilo.nombre}</h1>
         <p class="text-white text-lg">Artista: {vinilo.artista}</p>
-        <p class="text-white">Precio: </p>
-        <p class="text-white text-3xl font-semibold">{vinilo.precio}</p>
+        
+        <p class="text-white mt-4">Precio:</p>
+        <div class="flex items-center gap-3 mt-1">
+          <p class="text-white text-3xl font-semibold">{vinilo.precio}</p>
+          {esOferta && (
+            <p class="text-gray-400 text-xl line-through">
+              S/ {vinilo.precio_real.toFixed(2)}
+            </p>
+          )}
+        </div>
+
+        {esOferta && (
+          <p class={`text-sm mt-2 font-semibold ${esOfertaNavidena ? 'text-green-400' : 'text-red-400'}`}>
+            ¡Ahorra S/ {(vinilo.precio_real - vinilo.precioNumerico).toFixed(2)}!
+          </p>
+        )}
+
+        <!-- Stock que se actualizará dinámicamente -->
+        <div id="stock-container">
+          <p id="stock-display" class="text-green-400 text-sm mt-2">
+            Cargando stock...
+          </p>
+        </div>
 
         <div class="py-5">
-          <button class="mt-3 w-full flex items-center justify-center gap-2 bg-white hover:bg-[#4d5645] text-black hover:text-white font-semibold py-2 rounded-lg transition cursor-pointer">
-            Agregar
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 stroke-[2]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><circle cx="8" cy="21" r="1"></circle><circle cx="19" cy="21" r="1"></circle><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"></path></svg>
-          </button>
-          <button class="mt-3 w-full flex items-center justify-center gap-2 bg-white hover:bg-[#4d5645] text-black hover:text-white font-semibold py-2 rounded-lg transition cursor-pointer">
-            Comprar Ahora
-          </button>
-        </div>  
+          <div id="compra-container">
+            <div class="flex items-center gap-4 mb-4">
+              <label class="text-white">Cantidad:</label>
+              <div class="flex items-center border border-gray-600 rounded">
+                <button 
+                  id="decrementar"
+                  class="px-4 py-2 text-white hover:bg-gray-700 transition"
+                >
+                  -
+                </button>
+                <input 
+                  type="number" 
+                  id="cantidad"
+                  value="1"
+                  min="1"
+                  max={vinilo.stock}
+                  class="w-16 text-center bg-transparent text-white border-x border-gray-600 py-2"
+                  readonly
+                />
+                <button 
+                  id="incrementar"
+                  class="px-4 py-2 text-white hover:bg-gray-700 transition"
+                >
+                  +
+                </button>
+              </div>
+            </div>
 
-        <p class="text-white py-2 ">Género: {vinilo.genero}.</p>
+            <button 
+              id="agregarCarrito"
+              class="mt-3 w-full flex items-center justify-center gap-2 bg-white hover:bg-[#4d5645] text-black hover:text-white font-semibold py-2 rounded-lg transition cursor-pointer"
+            >
+              Agregar al carrito
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 stroke-[2]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <circle cx="8" cy="21" r="1"></circle>
+                <circle cx="19" cy="21" r="1"></circle>
+                <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"></path>
+              </svg>
+            </button>
+            
+            <button 
+              id="comprarAhora"
+              class="mt-3 w-full flex items-center justify-center gap-2 bg-green-600 hover:bg-green-700 text-white font-semibold py-2 rounded-lg transition cursor-pointer"
+            >
+              Comprar ahora
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+              </svg>
+            </button>
+          </div>
+
+          <button 
+            id="sin-stock-btn"
+            disabled 
+            class="mt-3 w-full bg-gray-600 text-gray-400 font-semibold py-2 rounded-lg cursor-not-allowed hidden"
+          >
+            Producto agotado
+          </button>
+        </div>
+
+        <p class="text-white py-2">Género: {vinilo.genero}.</p>
 
         <h2 class="text-white py-3 text-lg font-semibold mt-6">Tracklist:</h2>
         <ol class="list-decimal list-inside space-y-1 mt-2 text-white">
@@ -51,3 +176,178 @@ const { vinilo } = Astro.props;
     </div>
   </section>
 </Layout>
+
+<script is:inline define:vars={{ vinilo }}>
+  window.__VINILO_DATA__ = {
+    id: vinilo.id,
+    title: vinilo.nombre,
+    artist: vinilo.artista,
+    price: vinilo.precioNumerico,
+    img: vinilo.imagen,
+    slug: vinilo.slug,
+    stock: vinilo.stock
+  };
+</script>
+
+<script>
+  import { addToCart } from '../../lib/stores/CartStore';
+  import { supabase } from '../../lib/supabase';
+  
+  const viniloData = (window as any).__VINILO_DATA__;
+  let stockActual = viniloData.stock;
+
+  const decrementarBtn = document.getElementById('decrementar');
+  const incrementarBtn = document.getElementById('incrementar');
+  const cantidadInput = document.getElementById('cantidad') as HTMLInputElement;
+  const agregarCarritoBtn = document.getElementById('agregarCarrito');
+  const comprarAhoraBtn = document.getElementById('comprarAhora');
+  const stockDisplay = document.getElementById('stock-display');
+  const compraContainer = document.getElementById('compra-container');
+  const sinStockBtn = document.getElementById('sin-stock-btn');
+
+  // Función para actualizar el stock desde la base de datos
+  async function actualizarStock() {
+    try {
+      const { data, error } = await supabase
+        .from('vinyls')
+        .select('stock')
+        .eq('id', viniloData.id)
+        .single();
+
+      if (error) throw error;
+
+      if (data) {
+        stockActual = data.stock;
+        viniloData.stock = data.stock;
+        
+        if (cantidadInput) {
+          cantidadInput.setAttribute('max', stockActual.toString());
+          
+          // Si la cantidad actual es mayor al stock, ajustarla
+          const cantidadActual = parseInt(cantidadInput.value);
+          if (cantidadActual > stockActual) {
+            cantidadInput.value = Math.max(1, stockActual).toString();
+          }
+        }
+
+        // Actualizar UI
+        if (stockDisplay) {
+          if (stockActual > 0) {
+            stockDisplay.textContent = `Stock disponible: ${stockActual} unidades`;
+            stockDisplay.className = 'text-green-400 text-sm mt-2';
+            compraContainer?.classList.remove('hidden');
+            sinStockBtn?.classList.add('hidden');
+          } else {
+            stockDisplay.textContent = 'Sin stock';
+            stockDisplay.className = 'text-red-400 text-sm mt-2 font-semibold';
+            compraContainer?.classList.add('hidden');
+            sinStockBtn?.classList.remove('hidden');
+          }
+        }
+      }
+    } catch (error) {
+      console.error('Error actualizando stock:', error);
+      if (stockDisplay) {
+        stockDisplay.textContent = `Stock: ${stockActual} unidades`;
+        stockDisplay.className = 'text-yellow-400 text-sm mt-2';
+      }
+    }
+  }
+
+  // Actualizar stock al cargar la página
+  actualizarStock();
+
+  if (decrementarBtn && incrementarBtn && cantidadInput) {
+    decrementarBtn.addEventListener('click', () => {
+      const valorActual = parseInt(cantidadInput.value);
+      if (valorActual > 1) {
+        cantidadInput.value = (valorActual - 1).toString();
+      }
+    });
+
+    incrementarBtn.addEventListener('click', () => {
+      const valorActual = parseInt(cantidadInput.value);
+      if (valorActual < stockActual) {
+        cantidadInput.value = (valorActual + 1).toString();
+      }
+    });
+
+    cantidadInput.addEventListener('input', () => {
+      let valor = parseInt(cantidadInput.value);
+      if (isNaN(valor) || valor < 1) {
+        cantidadInput.value = '1';
+      } else if (valor > stockActual) {
+        cantidadInput.value = stockActual.toString();
+      }
+    });
+  }
+
+  function agregarAlCarrito(cantidad: number, redirigir: boolean = false) {
+    // Verificar stock actualizado antes de agregar
+    if (stockActual < cantidad) {
+      alert(`Solo hay ${stockActual} unidades disponibles`);
+      return;
+    }
+
+    let agregadosExitosos = 0;
+    for (let i = 0; i < cantidad; i++) {
+      const exito = addToCart(
+        {
+          id: viniloData.id,
+          title: viniloData.title,
+          artist: viniloData.artist,
+          price: viniloData.price,
+          img: viniloData.img,
+          slug: viniloData.slug,
+          stock: stockActual
+        },
+        1
+      );
+      
+      if (exito) {
+        agregadosExitosos++;
+      } else {
+        break;
+      }
+    }
+
+    if (agregadosExitosos > 0) {
+      // Actualizar stock después de agregar al carrito
+      actualizarStock();
+      
+      if (redirigir) {
+        window.location.href = '/checkout';
+      }
+    }
+  }
+
+  agregarCarritoBtn?.addEventListener('click', () => {
+    const cantidad = parseInt(cantidadInput?.value || '1');
+    agregarAlCarrito(cantidad, false);
+  });
+
+  comprarAhoraBtn?.addEventListener('click', () => {
+    const cantidad = parseInt(cantidadInput?.value || '1');
+    agregarAlCarrito(cantidad, true);
+  });
+
+  // Actualizar stock cada 30 segundos
+  setInterval(actualizarStock, 30000);
+</script>
+
+<style>
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-fade-in {
+    animation: fade-in 0.3s ease-out;
+  }
+</style>
